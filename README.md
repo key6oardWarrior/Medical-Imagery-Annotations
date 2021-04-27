@@ -29,8 +29,7 @@
 
 <h2>Flow of Control</h2>
 <ol>
-	<li>Check if the user generated results file exists.<br />
-	<img src="" alt="Does CSV Exist?" /></li>
+	<li>Check if the user generated results file exists.<br /></li>
 	<li>Start threads to download images and get user generated response data.<br /></li>
 	<li>Downloading images thread uses the wget library to download all the images in the results CSV files.<br /></li>
 	<li>The get responses thead get all the selected keywords and store them in a file<br /></li>
