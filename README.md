@@ -29,13 +29,13 @@
 
 <h2>Flow of Control</h2>
 <ol>
-	<li>Check if the user generated results file exists.<br /></li>
-	<li>Start threads to download images and get user generated response data.<br /></li>
-	<li>Downloading images thread uses the wget library to download all the images in the results CSV files.<br /></li>
-	<li>The get responses thead get all the selected keywords and store them in a file<br /></li>
-	<li>The main thread will create an instance of FindUnion and generate meta data constants.</li><br />
-	<li>The cropping algorithm takes each users cropping value and puts them into 1D arrays to be used in the crop method.</li><br />
-	<li>Crop each image according to the values stored in 1D array</li><br />
+	<li>Check if the user generated results file exists.</li>
+	<li>Start threads to download images and get user generated response data.</li>
+	<li>Downloading images thread uses the wget library to download all the images in the results CSV files.</li>
+	<li>The get responses thead get all the selected keywords and store them in a file</li>
+	<li>The main thread will create an instance of FindUnion and generate meta data constants.</li>
+	<li>The cropping algorithm takes each users cropping value and puts them into 1D arrays to be used in the crop method.</li>
+	<li>Crop each image according to the values stored in 1D array</li>
 </ol>
 
  </body>
