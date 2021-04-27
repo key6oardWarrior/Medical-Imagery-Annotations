@@ -3,8 +3,8 @@ import threading
 
 import pandas as pd
 
-from FindUnion import FindUnion
-from GetData import GetData
+from getData.FindUnion import FindUnion
+from getData.GetData import GetData
 
 from staticPy.Singleton import Singleton
 from staticPy.ClusterData import ClusterData
