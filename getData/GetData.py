@@ -5,7 +5,6 @@ class GetData:
 	'''
 	# Get and format all user data from CSV_FILE
 	'''
-
 	def __init__(self, RESOURCES, FILE_DATA):
 		'''
 		@param <class '__main__.Singleton'>\n
