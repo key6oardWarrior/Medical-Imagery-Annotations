@@ -73,7 +73,6 @@ class Setup:
 
 			conceptIDsThread.join()
 			self.__resources.folderCnt += 1
-		print("\nAll CSV files have been filtered. Code developed by: https://github.com/key6oardWarrior")
 
 setup = Setup()
 setup.start()
