@@ -13,7 +13,8 @@ class Setup:
 	__resources = Singleton.getInstance(ClusterData())
 
 	def __init__(self):
-		pass
+		while os.path.isdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}"):
+			self.__resources.folderCnt += 1
 
 	def __wantNewFile(self, msg, i):
 		'''
@@ -45,12 +46,7 @@ class Setup:
 			else:
 				i += 1
 
-	def __setFolderCnt(self):
-		while os.path.isdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}"):
-			self.__resources.folderCnt += 1
-
 	def start(self):
-		self.__setFolderCnt()
 		os.system(f"mkdir {self.__resources.PATH}\\images{self.__resources.folderCnt}")
 		os.system(f"mkdir {self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
 		os.system(f"mkdir {self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
