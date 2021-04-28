@@ -27,7 +27,7 @@
 	<li>The Threading module is used to create multi-threaded work loads. See <a href="#DP2">Design Princple #2</a>.</li>
 </ol>
 
-<h2>Flow of Control</h2>
+<h2>How it Works</h2>
 <ol>
 	<li>Check if the user generated results file exists.</li>
 	<li>Start threads to download images and get user generated response data.</li>
