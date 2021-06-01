@@ -1,10 +1,9 @@
 import os
 import pandas as pd
-import numpy as np
 
 class ClusterData:
 	'''
-	# Each concept ID is used a key in __cluster
+	# Each concept ID is used as a key in __cluster
 	# Values will be each cropped image location
 	'''
 	__cluster = {}
@@ -42,7 +41,7 @@ class ClusterData:
 		longestArr = 0
 
 		for i in range(len(keys)):
-			if((self.__cluster[keys[i]] == []) or (self.__cluster[keys[i]] == None)):
+			if not self.__cluster[keys[i]]:
 				del self.__cluster[keys[i]] # remove keys with empty values
 			else: # determin longestArr
 				if len(self.__cluster[keys[i]]) > longestArr:
