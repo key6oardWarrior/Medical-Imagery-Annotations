@@ -43,9 +43,8 @@ class ClusterData:
 		for i in range(len(keys)):
 			if not self.__cluster[keys[i]]:
 				del self.__cluster[keys[i]] # remove keys with empty values
-			else: # determin longestArr
-				if len(self.__cluster[keys[i]]) > longestArr:
-					longestArr = len(self.__cluster[keys[i]])
+			elif len(self.__cluster[keys[i]]) > longestArr: # determin longestArr
+				longestArr = len(self.__cluster[keys[i]])
 
 		for i in self.__cluster.keys(): # make all values in dict same length
 			appendAmount = longestArr - len(self.__cluster[i])
