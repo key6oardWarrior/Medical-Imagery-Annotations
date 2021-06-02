@@ -91,7 +91,7 @@ class FindUnion:
 				# print(cropped.shape) # new image size
 				# cv2.waitKey(0) # uncomment to view images
 				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(j, f"{PATH}croppedImages\\{i}.jpg")
+					self.__resources.dataCluster.appendValue(j, f"{PATH}croppedImages\\{i}.jpg", cropped)
 
 	def __helper(self, VALUE, VALUE1):
 		'''

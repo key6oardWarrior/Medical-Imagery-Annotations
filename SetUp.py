@@ -10,7 +10,7 @@ from staticPy.Singleton import Singleton
 from staticPy.ClusterData import ClusterData
 
 class Setup:
-	__resources = Singleton.getInstance(ClusterData())
+	__resources = Singleton.getInstance()
 
 	def __init__(self):
 		while os.path.isdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}"):
