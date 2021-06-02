@@ -12,6 +12,7 @@ class GetData:
 		'''
 		self.__resources = RESOURCES
 		self.__FILE_DATA = FILE_DATA
+		self.__ids = []
 
 	def __getIDs(self):
 		'''
@@ -19,11 +20,9 @@ class GetData:
 		the append each dillimmited peice of data to self.ids
 		'''
 		self.__ids = []
-		biggest = 0
-
-		for i in range(len(self.__allIDs)):
-			index = self.__allIDs[i].index(":")
-			localID = (self.__allIDs[i])[: index]
+		for i in self.__allIDs:
+			index = i.index(":")
+			localID = (i)[: index]
 
 			self.__ids.append(localID)
 			self.__resources.dataCluster.put(localID)
