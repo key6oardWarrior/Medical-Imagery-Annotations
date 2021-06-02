@@ -242,4 +242,4 @@ class FindUnion:
 
 		print("Done collecting data\n")
 		self.__crop()
-		self.__resources.dataCluster.makeCSV(self.__resources)
+		self.__resources.dataCluster.makeCSV()
