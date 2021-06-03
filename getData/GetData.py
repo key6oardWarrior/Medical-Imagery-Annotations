@@ -5,6 +5,8 @@ class GetData:
 	'''
 	# Get and format all user data from CSV_FILE
 	'''
+	__ids = []
+
 	def __init__(self, RESOURCES, FILE_DATA):
 		'''
 		@param <class '__main__.Singleton'>\n
@@ -12,7 +14,6 @@ class GetData:
 		'''
 		self.__resources = RESOURCES
 		self.__FILE_DATA = FILE_DATA
-		self.__ids = []
 
 	def __getIDs(self):
 		'''
@@ -22,7 +23,7 @@ class GetData:
 		self.__ids = []
 		for i in self.__allIDs:
 			index = i.index(":")
-			localID = (i)[: index]
+			localID = i[:index].strip()
 
 			self.__ids.append(localID)
 			self.__resources.dataCluster.put(localID)
