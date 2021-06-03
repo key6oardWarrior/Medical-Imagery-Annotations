@@ -84,14 +84,20 @@ class FindUnion:
 			except: # just incase of edge case
 				pass
 			else:
-				cv2.imwrite(f"{PATH}croppedImages\\{i}.jpg", cropped)
+				FILE = f"{PATH}croppedImages\\{i}.jpg"
+				START = FILE.rindex("\\")
+
+				cv2.imwrite(FILE, cropped)
+				self.__resources.dataCluster.appendImage(cropped, int(FILE[START+1: -4]))
 				# cv2.imshow(f"{PATH}{i}.jpg", image) # to veiw the og image
 				# cv2.imshow(f"{PATH}croppedImages\\{i}.jpg", cropped) # to view cropped image
 				# print(image.shape) # og image size
 				# print(cropped.shape) # new image size
 				# cv2.waitKey(0) # uncomment to view images
 				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(j, f"{PATH}croppedImages\\{i}.jpg", cropped)
+					self.__resources.dataCluster.appendValue(FILE)
+			
+		print("Cropping complete")
 
 	def __helper(self, VALUE, VALUE1):
 		'''

@@ -1,5 +1,5 @@
 import os
-from ClusterData import ClusterData
+from staticPy.ClusterData import ClusterData
 
 class Singleton(object):
 	'''
