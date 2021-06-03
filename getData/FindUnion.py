@@ -95,7 +95,7 @@ class FindUnion:
 				# print(cropped.shape) # new image size
 				# cv2.waitKey(0) # uncomment to view images
 				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(FILE)
+					self.__resources.dataCluster.appendValue(j.strip(), FILE)
 			
 		print("Cropping complete")
 
