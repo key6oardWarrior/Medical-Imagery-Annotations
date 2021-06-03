@@ -9,9 +9,6 @@ class ClusterData:
 	'''
 	__cluster = {}
 	__images = {}
-	__keys = []
-	__prevKey = ""
-	__keysIndex = 0
 
 	def __init__(self, RESOURCES):
 		self.__resources = RESOURCES
@@ -32,7 +29,7 @@ class ClusterData:
 			os.mkdir(PATH)
 
 		for key, value in self.__cluster.items():
-			FILE = os.path.join(PATH, key)
+			FILE = os.path.join(PATH, key.strip())
 
 			if os.path.isdir(FILE) == False:
 				os.mkdir(FILE)
@@ -47,31 +44,29 @@ class ClusterData:
 				IMAGE = self.__images[int(i[index: -4])]
 				
 				cv2.imwrite(os.path.join(FILE, f"{i[index:]}"), IMAGE)
+		
+		print("Clustering complete")
 
 	def put(self, KEY):
 		'''
 		# Put KEY in the dict if the key does not already exists
 		# this will ensure that a key's value is never overridden
 
-		@param <class 'str'> the key to be put in dict
+		@param <class 'str'> the KEY is a concept id
 		'''
 		if (KEY in self.__cluster.keys()) == False:
 			self.__keys.append(KEY)
 			self.__cluster[KEY] = []
 
-	def appendValue(self, VALUE):
+	def appendValue(self, KEY, VALUE):
 		'''
 		# Append VALUE to __cluster[KEY]
-
 		@param <class 'str'> the key to an array that VALUE will be appended to\n
 		@param <class 'str'> value that will get appened to __cluster[KEY]
+		@param <class 'numpy.ndarray'>
 		'''
-		tempKey = self.__keys[self.__keysIndex]
-		self.__cluster[tempKey].append(VALUE)
-		
-		if tempKey != self.__prevKey:
-			self.__keysIndex += 1
-			self.__prevKey = tempKey
+		if KEY in self.__cluster.keys():
+			self.__cluster[KEY].append(VALUE)
 	
 	def appendImage(self, IMAGE, KEY):
 		'''
@@ -90,6 +85,7 @@ class ClusterData:
 
 		@param <class '__main__.Singleton'>
 		'''
+		print("Clustering data")
 		KEYS = list(self.__cluster.keys())
 		longestArr = 0
 
