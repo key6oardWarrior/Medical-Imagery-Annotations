@@ -8,7 +8,10 @@ class ClusterData:
 	# Values will be each cropped image location
 	'''
 	__cluster = {}
-	__images = []
+	__images = {}
+	__keys = []
+	__prevKey = ""
+	__keysIndex = 0
 
 	def __init__(self, RESOURCES):
 		self.__resources = RESOURCES
@@ -21,15 +24,29 @@ class ClusterData:
 		easier to just must the image than rewrite the code to put images in
 		the right place.
 		'''
-		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\simular\\"
-		imageIndex = 0
+		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\simular"
+		NUM_OF_IMAGES = len(self.__images)
 
 		# create dir. the dir name will be the concept id
-		os.system(f"mkdir {PATH}")
+		if os.path.isdir(PATH) == False:
+			os.mkdir(PATH)
 
-		for i in self.__images:
-			cv2.imwrite(f"{PATH}\\{imageIndex}.jpg", i)
-			imageIndex += 1
+		for key, value in self.__cluster.items():
+			FILE = os.path.join(PATH, key)
+
+			if os.path.isdir(FILE) == False:
+				os.mkdir(FILE)
+			
+			for i in value:
+				index = i.rfind("\\")
+
+				if index == -1:
+					continue
+				
+				index += 1
+				IMAGE = self.__images[int(i[index: -4])]
+				
+				cv2.imwrite(os.path.join(FILE, f"{i[index:]}"), IMAGE)
 
 	def put(self, KEY):
 		'''
@@ -39,19 +56,33 @@ class ClusterData:
 		@param <class 'str'> the key to be put in dict
 		'''
 		if (KEY in self.__cluster.keys()) == False:
+			self.__keys.append(KEY)
 			self.__cluster[KEY] = []
 
-	def appendValue(self, KEY, VALUE, IMAGE):
+	def appendValue(self, VALUE):
 		'''
 		# Append VALUE to __cluster[KEY]
 
 		@param <class 'str'> the key to an array that VALUE will be appended to\n
 		@param <class 'str'> value that will get appened to __cluster[KEY]
-		@param <class 'numpy.ndarray'>
 		'''
-		if KEY in self.__cluster.keys():
-			self.__cluster[KEY].append(VALUE)
-			self.__images.append(IMAGE)
+		tempKey = self.__keys[self.__keysIndex]
+		self.__cluster[tempKey].append(VALUE)
+		
+		if tempKey != self.__prevKey:
+			self.__keysIndex += 1
+			self.__prevKey = tempKey
+	
+	def appendImage(self, IMAGE, KEY):
+		'''
+		# Each image has a number for a name, so each image will be stored at
+		# self.__image[KEY]. This will make retriving the image easy because
+		# the key will already be known.
+
+		@param <class 'numpy.ndarray'> the image\n
+		@param <class 'int'> the index the image will go
+		'''
+		self.__images[KEY] = IMAGE
 
 	def makeCSV(self):
 		'''
@@ -59,18 +90,20 @@ class ClusterData:
 
 		@param <class '__main__.Singleton'>
 		'''
-		self.__KEYS = list(self.__cluster.keys())
+		KEYS = list(self.__cluster.keys())
 		longestArr = 0
 
-		for i in self.__KEYS:
+		for i in KEYS:
 			if not self.__cluster[i]:
 				del self.__cluster[i] # remove keys with empty values
+
 			elif len(self.__cluster[i]) > longestArr: # determin longestArr
 				longestArr = len(self.__cluster[i])
 
 		if longestArr > 0:
 			for i in self.__cluster.keys(): # make all values in dict same length
 				appendAmount = longestArr - len(self.__cluster[i])
+
 				if appendAmount > 0:
 					self.__cluster[i].extend(["N/A"]*appendAmount)
 
