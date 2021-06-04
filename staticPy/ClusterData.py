@@ -60,8 +60,9 @@ class ClusterData:
 	def appendValue(self, KEY, VALUE):
 		'''
 		# Append VALUE to __cluster[KEY]
+
 		@param <class 'str'> the key to an array that VALUE will be appended to\n
-		@param <class 'str'> value that will get appened to __cluster[KEY]
+		@param <class 'str'> value that will get appened to __cluster[KEY]\n
 		@param <class 'numpy.ndarray'>
 		'''
 		if KEY in self.__cluster.keys():
