@@ -29,7 +29,7 @@ class ClusterData:
 			os.mkdir(PATH)
 
 		for key, value in self.__cluster.items():
-			FILE = os.path.join(PATH, key.strip())
+			FILE = os.path.join(PATH, key)
 
 			if os.path.isdir(FILE) == False:
 				os.mkdir(FILE)
@@ -55,7 +55,6 @@ class ClusterData:
 		@param <class 'str'> the KEY is a concept id
 		'''
 		if (KEY in self.__cluster.keys()) == False:
-			self.__keys.append(KEY)
 			self.__cluster[KEY] = []
 
 	def appendValue(self, KEY, VALUE):
