@@ -1,4 +1,5 @@
 import os
+import sys
 import threading
 
 import pandas as pd
@@ -28,6 +29,10 @@ class Setup:
 
 		if input("Do you want use a different file Y/N: ").upper() == "N":
 			del self.__files[i]
+			
+			if len(self.__files) == 0:
+				sys.exit(0)
+			
 			return False
 		return True
 
@@ -45,13 +50,22 @@ class Setup:
 					self.__files[i] = input("Enter name of new file: ")
 			else:
 				i += 1
+	
+	def __getUsers(self):
+		numUsers = input("Enter the number of questions each user was asked: ")
+		
+		while numUsers.isnumeric() == False:
+			print("Must enter a number")
+			numUsers = input("Enter the number of questions each user was asked: ")
+		return numUsers
 
 	def start(self):
-		os.system(f"mkdir {self.__resources.PATH}\\images{self.__resources.folderCnt}")
-		os.system(f"mkdir {self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
-		os.system(f"mkdir {self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
+		os.mkdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
+		os.mkdir(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
+		os.mkdir(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
 
-		setup.__checkFiles()
+		self.__checkFiles()
+		numQuestions = self.__getUsers()
 
 		for i in self.__files:
 			fileData = pd.read_csv(i)
@@ -64,7 +78,7 @@ class Setup:
 			conceptIDsThread.start()
 			downloadImagesThread.start()
 
-			union = FindUnion(self.__resources, fileData, downloadImagesThread)
+			union = FindUnion(self.__resources, fileData, downloadImagesThread, numQuestions)
 			union.findUnion()
 
 			conceptIDsThread.join()

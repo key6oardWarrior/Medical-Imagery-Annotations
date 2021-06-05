@@ -6,7 +6,7 @@ class FindUnion:
 	# Find the union between all the user data given. Then use the data
 	# to crop an image
 	'''
-	def __init__(self, RESOURCES, FILE_DATA, THREAD):
+	def __init__(self, RESOURCES, FILE_DATA, THREAD, NUM_QUESTIONS):
 		'''
 		# Get all the cropping values given from user.
 
@@ -16,6 +16,7 @@ class FindUnion:
 		'''
 		self.__resources = RESOURCES
 		self.__THREAD = THREAD
+		self.__NUM_OF_QUESTIONS = NUM_QUESTIONS
 
 		self.__orignalCroppingValues = {}
 		KEYWORD = "Answer.annotation_data"
@@ -188,10 +189,10 @@ class FindUnion:
 		self.__top = []
 		self.__width = []
 		self.__height = []
-		NUM_OF_QUESTIONS = 13 # 25
+		# NUM_OF_QUESTIONS = 13 # 25
 
 		# META DATA CONSTANT
-		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // NUM_OF_QUESTIONS
+		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // self.__NUM_OF_QUESTIONS
 
 		'''
 		this allows each user's responces to be compared to each
