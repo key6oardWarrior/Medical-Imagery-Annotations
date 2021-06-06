@@ -20,7 +20,10 @@ class Singleton(object):
 		
 		FILE_PATH = os.path.dirname(__file__)
 		index = FILE_PATH.rindex("\\")
-		self.PATH = FILE_PATH[:index]
+		self.PATH = f"{FILE_PATH[:index]}\\results"
+
+		if os.path.isdir(self.PATH) == False:
+			os.mkdir(self.PATH)
 
 	@classmethod
 	def getInstance(cls, isTest=None):
