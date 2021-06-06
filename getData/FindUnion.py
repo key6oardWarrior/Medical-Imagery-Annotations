@@ -63,7 +63,7 @@ class FindUnion:
 		cnt = 0
 
 		print("\n")
-		os.system(f"mkdir {PATH}croppedImages\\")
+		os.mkdir(f"{PATH}croppedImages")
 
 		self.__THREAD.join()
 		print("\nCroping images now\n")
@@ -85,18 +85,14 @@ class FindUnion:
 			except: # just incase of edge case
 				pass
 			else:
-				FILE = f"{PATH}croppedImages\\{i}.jpg"
-				START = FILE.rindex("\\")
-
-				cv2.imwrite(FILE, cropped)
-				self.__resources.dataCluster.appendImage(cropped, int(FILE[START+1: -4]))
+				cv2.imwrite(f"{PATH}croppedImages\\{i}.jpg", cropped)
 				# cv2.imshow(f"{PATH}{i}.jpg", image) # to veiw the og image
 				# cv2.imshow(f"{PATH}croppedImages\\{i}.jpg", cropped) # to view cropped image
 				# print(image.shape) # og image size
 				# print(cropped.shape) # new image size
 				# cv2.waitKey(0) # uncomment to view images
 				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(j.strip(), FILE)
+					self.__resources.dataCluster.appendValue(j.strip(), f"{PATH}croppedImages\\{i}.jpg")
 			
 		print("Cropping complete")
 
@@ -179,10 +175,10 @@ class FindUnion:
 		'''
 		if isFirst:
 			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
-				self.__croppingValues.update({i: self.__orignalCroppingValues[i]})
+				self.__croppingValues[i] = self.__orignalCroppingValues[i]
 		else:
 			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
-				self.__croppingValues1.update({i: self.__orignalCroppingValues[i]})
+				self.__croppingValues1[i] = self.__orignalCroppingValues[i]
 
 	def findUnion(self):
 		self.__left = []
@@ -193,6 +189,12 @@ class FindUnion:
 
 		# META DATA CONSTANT
 		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // self.__NUM_OF_QUESTIONS
+		
+		if self.__USERS_SURVEYED <= 1:
+			shutil.rmtree(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
+			shutil.rmtree(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
+			shutil.rmtree(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
+			raise RuntimeError("The number of users surveyed must be more than one")
 
 		'''
 		this allows each user's responces to be compared to each
@@ -249,4 +251,4 @@ class FindUnion:
 
 		print("Done collecting data\n")
 		self.__crop()
-		self.__resources.dataCluster.makeCSV()
+		self.__resources.dataCluster.makeCluster()
