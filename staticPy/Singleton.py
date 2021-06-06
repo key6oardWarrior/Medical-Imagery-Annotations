@@ -8,7 +8,6 @@ class Singleton(object):
 	'''
 	__createKey = object()
 	__instance = None
-	PATH = os.path.dirname(__file__)
 	folderCnt = 0
 	ids = []
 
@@ -18,6 +17,10 @@ class Singleton(object):
 		'''
 		assert(createKey == Singleton.__createKey), \
 			"Singleton objects must be created using Singleton.getInstance()"
+		
+		FILE_PATH = os.path.dirname(__file__)
+		index = FILE_PATH.rindex("\\")
+		self.PATH = FILE_PATH[:index]
 
 	@classmethod
 	def getInstance(cls, isTest=None):
