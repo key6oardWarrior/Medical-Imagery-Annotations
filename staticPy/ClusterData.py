@@ -1,6 +1,6 @@
 import os
+import shutil
 import pandas as pd
-import cv2
 
 class ClusterData:
 	'''
@@ -8,7 +8,6 @@ class ClusterData:
 	# Values will be each cropped image location
 	'''
 	__cluster = {}
-	__images = {}
 
 	def __init__(self, RESOURCES):
 		'''
@@ -21,7 +20,6 @@ class ClusterData:
 		# Group images that have the same concept id in the same folder
 		'''
 		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\simular"
-		NUM_OF_IMAGES = len(self.__images)
 
 		# create dir the dir name will be the concept id
 		if os.path.isdir(PATH) == False:
@@ -32,17 +30,12 @@ class ClusterData:
 
 			if os.path.isdir(FILE) == False:
 				os.mkdir(FILE)
-			
-			for i in value:
-				index = i.rfind("\\")
 
-				if index == -1:
+			for i in value:
+				if i == "N/A":
 					continue
-				
-				index += 1
-				IMAGE = self.__images[int(i[index: -4])]
-				
-				cv2.imwrite(os.path.join(FILE, f"{i[index:]}"), IMAGE)
+
+				shutil.copy2(i, FILE)
 		
 		print("Clustering complete")
 
@@ -66,20 +59,10 @@ class ClusterData:
 		if KEY in self.__cluster.keys():
 			self.__cluster[KEY].append(VALUE)
 	
-	def appendImage(self, IMAGE, KEY):
+	def makeCluster(self):
 		'''
-		# Each image has a number for a name, so each image will be stored at
-		# self.__image[KEY]. This will make retriving the image easy because
-		# the key will already be known.
-
-		@param <class 'numpy.ndarray'> the image\n
-		@param <class 'int'> the image's number
-		'''
-		self.__images[KEY] = IMAGE
-
-	def makeCSV(self):
-		'''
-		# Save the cluster data in a comma delimited csv file
+		# Cluster all data then save it in a comma delimited csv file
+		# and group all images that are simular
 
 		@param <class '__main__.Singleton'>
 		'''
