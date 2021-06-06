@@ -13,6 +13,7 @@ class FindUnion:
 		@param <class <class '__main__.Singleton'>\n
 		@param <class 'pandas.core.frame.DataFrame'> file data dataframe\n
 		@param <class 'threading.Thread'> downloading images thread
+		@param <class 'int'> the number of questions each user was asked
 		'''
 		self.__resources = RESOURCES
 		self.__THREAD = THREAD
@@ -20,7 +21,6 @@ class FindUnion:
 
 		self.__orignalCroppingValues = {}
 		KEYWORD = "Answer.annotation_data"
-		IMAGE = "Image"
 		cnt = 0
 
 		for i in FILE_DATA[KEYWORD]:
@@ -32,7 +32,7 @@ class FindUnion:
 		'''
 		# Find numbers in self.FILE_DATA[KEYWORD][DATA] and add each number to a list.
 
-		@param <class 'str'>
+		@param <class 'str'> string that may contains the needed data
 		'''
 		self.__tempValues = []
 		temp = ""
@@ -209,7 +209,7 @@ class FindUnion:
 		for cnt in range(stop):
 			self.__croppingValues = {}
 			self.__start = (self.__start + 1) if cnt != 0 else 0
-			self.__end = (self.__end + 1) if cnt != 0 else NUM_OF_QUESTIONS*self.__USERS_SURVEYED
+			self.__end = (self.__end + 1) if cnt != 0 else self.__NUM_OF_QUESTIONS*self.__USERS_SURVEYED
 
 			self.__setValues()
 

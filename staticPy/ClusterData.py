@@ -11,20 +11,19 @@ class ClusterData:
 	__images = {}
 
 	def __init__(self, RESOURCES):
+		'''
+		@param <class <class '__main__.Singleton'>
+		'''
 		self.__resources = RESOURCES
 
 	def __groupImages(self):
 		'''
 		# Group images that have the same concept id in the same folder
-
-		Since the code for other algorithms have already been created it is
-		easier to just must the image than rewrite the code to put images in
-		the right place.
 		'''
 		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\simular"
 		NUM_OF_IMAGES = len(self.__images)
 
-		# create dir. the dir name will be the concept id
+		# create dir the dir name will be the concept id
 		if os.path.isdir(PATH) == False:
 			os.mkdir(PATH)
 
@@ -63,7 +62,6 @@ class ClusterData:
 
 		@param <class 'str'> the key to an array that VALUE will be appended to\n
 		@param <class 'str'> value that will get appened to __cluster[KEY]\n
-		@param <class 'numpy.ndarray'>
 		'''
 		if KEY in self.__cluster.keys():
 			self.__cluster[KEY].append(VALUE)
@@ -75,13 +73,13 @@ class ClusterData:
 		# the key will already be known.
 
 		@param <class 'numpy.ndarray'> the image\n
-		@param <class 'int'> the index the image will go
+		@param <class 'int'> the image's number
 		'''
 		self.__images[KEY] = IMAGE
 
 	def makeCSV(self):
 		'''
-		# Save the cluster data in a file
+		# Save the cluster data in a comma delimited csv file
 
 		@param <class '__main__.Singleton'>
 		'''

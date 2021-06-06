@@ -10,15 +10,15 @@ class GetData:
 	def __init__(self, RESOURCES, FILE_DATA):
 		'''
 		@param <class '__main__.Singleton'>\n
-		@param <class 'dict'>
+		@param <class 'dict'> add data in the batch file
 		'''
 		self.__resources = RESOURCES
 		self.__FILE_DATA = FILE_DATA
 
 	def __getIDs(self):
 		'''
-		set self.allIDs to a numpy array and use ":" as a dilimmiter
-		the append each dillimmited peice of data to self.ids
+		set self.__allIDs to an array and use ":" as a dilimmiter
+		the append each delimited peice of data to self__.ids
 		'''
 		self.__ids = []
 		for i in self.__allIDs:
