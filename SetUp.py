@@ -8,7 +8,6 @@ from getData.FindUnion import FindUnion
 from getData.GetData import GetData
 
 from staticPy.Singleton import Singleton
-from staticPy.ClusterData import ClusterData
 
 class Setup:
 	__resources = Singleton.getInstance()
