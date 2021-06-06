@@ -57,7 +57,7 @@ class Setup:
 		while numUsers.isnumeric() == False:
 			print("Must enter a number")
 			numUsers = input("Enter the number of questions each user was asked: ")
-		return numUsers
+		return int(numUsers)
 
 	def start(self):
 		os.mkdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
@@ -71,8 +71,8 @@ class Setup:
 			fileData = pd.read_csv(i)
 			getData = GetData(self.__resources, fileData)
 
-			downloadImagesThread = threading.Thread(target=getData.downloadImages, args=())
-			conceptIDsThread = threading.Thread(target=getData.getResponces, args=())
+			downloadImagesThread = threading.Thread(target=getData.downloadImages, args=(), daemon=True)
+			conceptIDsThread = threading.Thread(target=getData.getResponces, args=(), daemon=True)
 
 			print("\nDownloading Images\n")
 			conceptIDsThread.start()
