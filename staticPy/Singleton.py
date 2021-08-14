@@ -3,8 +3,8 @@ from staticPy.ClusterData import ClusterData
 
 class Singleton(object):
 	'''
-	# Create only one instance of shared resources. This will also prevent a
-	# race condition from occurring.
+	Create only one instance of shared resources. This will also prevent a
+	race condition from occurring.
 	'''
 	__createKey = object()
 	__instance = None
@@ -19,14 +19,14 @@ class Singleton(object):
 			"Singleton objects must be created using Singleton.getInstance()"
 		
 		FILE_PATH = os.path.dirname(__file__)
-		index = FILE_PATH.rindex("\\")
-		self.PATH = f"{FILE_PATH[:index]}\\results"
+		INDEX = FILE_PATH.rindex("\\")
+		self.PATH = f"{FILE_PATH[:INDEX]}\\results"
 
 		if os.path.isdir(self.PATH) == False:
 			os.mkdir(self.PATH)
 
 	@classmethod
-	def getInstance(cls, isTest=None):
+	def getInstance(cls, isTest=None) -> Singleton:
 		'''
 		@return <class '__main__.Singleton'> the only instance of Singleton
 		that will ever exist

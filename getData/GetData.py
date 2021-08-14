@@ -3,7 +3,7 @@ import pandas as pd
 
 class GetData:
 	'''
-	# Get and format all user data from CSV_FILE
+	Get and format all user data from CSV_FILE
 	'''
 	__ids = []
 
@@ -13,9 +13,9 @@ class GetData:
 		@param <class 'dict'> add data in the batch file
 		'''
 		self.__resources = RESOURCES
-		self.__FILE_DATA = FILE_DATA
+		self.__FILE_DATA = pd.read_csv(FILE_DATA)
 
-	def __getIDs(self):
+	def __getIDs(self) -> None:
 		'''
 		set self.__allIDs to an array and use ":" as a dilimmiter
 		the append each delimited peice of data to self__.ids
@@ -28,12 +28,11 @@ class GetData:
 			self.__ids.append(localID)
 			self.__resources.dataCluster.put(localID)
 
-	def getResponces(self):
+	def getResponces(self) -> None:
 		'''
-		# Put all user responces in self.__FILE_DATA (<class 'dict'>), so they can
-		# be put in a comma delimited csv file.
+		Put all user responces in self.__FILE_DATA (<class 'dict'>), so they can
+		be put in a comma delimited csv file.
 		'''
-
 		conceptIDs = {
 			"Concept IDs": [],
 			"Answer.annotation_data": []
@@ -64,7 +63,7 @@ class GetData:
 		pd.DataFrame(conceptIDs).to_csv(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}\\filteredConceptIDs.csv", sep=",")
 		pd.DataFrame(boundingBoxes).to_csv(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}\\boundingBoxes.csv", sep=",")
 
-	def downloadImages(self):
+	def downloadImages(self) -> None:
 		userData = {}
 		IMAGE_FILE = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\"
 		KEYWORD = "Input.image_url"

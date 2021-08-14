@@ -1,38 +1,42 @@
 import os
 import cv2
+import shutil
 
 class FindUnion:
 	'''
-	# Find the union between all the user data given. Then use the data
-	# to crop an image
+	Find the union between all the user data given. Then use the data
+	to crop an image
 	'''
-	def __init__(self, RESOURCES, FILE_DATA, THREAD, NUM_QUESTIONS):
+	def __init__(self, RESOURCES, fileData, THREAD):
 		'''
-		# Get all the cropping values given from user.
+		Get all the cropping values given from user.
 
-		@param <class <class '__main__.Singleton'>\n
-		@param <class 'pandas.core.frame.DataFrame'> file data dataframe\n
-		@param <class 'threading.Thread'> downloading images thread
-		@param <class 'int'> the number of questions each user was asked
+		# Params:
+		<class '__main__.Singleton'>\n
+		<class 'pandas.core.frame.DataFrame'> file data dataframe\n
+		<class 'threading.Thread'> downloading images thread
 		'''
 		self.__resources = RESOURCES
 		self.__THREAD = THREAD
-		self.__NUM_OF_QUESTIONS = NUM_QUESTIONS
 
 		self.__orignalCroppingValues = {}
 		KEYWORD = "Answer.annotation_data"
 		cnt = 0
 
-		for i in FILE_DATA[KEYWORD]:
+		import pandas as pd
+		fileData = pd.read_csv(fileData)
+
+		for i in fileData[KEYWORD]:
 			self.__getCropHelper(i)
 			self.__orignalCroppingValues[cnt] = self.__tempValues
 			cnt += 1
 
-	def __getCropHelper(self, DATA):
+	def __getCropHelper(self, DATA: str) -> None:
 		'''
-		# Find numbers in self.FILE_DATA[KEYWORD][DATA] and add each number to a list.
+		Find numbers in self.FILE_DATA[KEYWORD][DATA] and add each number to a list.
 
-		@param <class 'str'> string that may contains the needed data
+		# Params:
+		DATA - string that may contains the needed data
 		'''
 		self.__tempValues = []
 		temp = ""
@@ -51,10 +55,10 @@ class FindUnion:
 				finally:
 					temp = ""
 
-	def __crop(self):
+	def __crop(self) -> None:
 		'''
-		# Crop each image based on the directional values
-		# found in left, top, width, and height
+		Crop each image based on the directional values
+		found in left, top, width, and height
 		'''
 		left = []
 		top = []
@@ -96,16 +100,15 @@ class FindUnion:
 			
 		print("Cropping complete")
 
-	def __helper(self, VALUE, VALUE1):
+	def __helper(self, VALUE: int, VALUE1: int):
 		'''
-		# Determin which value is bigger and if the smaller value is
-		# within the threshold of the bigger value. If the
-		# smaller value is not within the threshold, then return
-		# "No union found" else return the smaller value.
+		Determin which value is bigger and if the smaller value is
+		within the threshold of the bigger value. If the
+		smaller value is not within the threshold, then return
+		"No union found" else return the smaller value.
 
-		@param <class 'int'>\n
-		@param <class 'int'>\n
-		@return <class 'str'> or <class 'int'>
+		# Returns:
+		<class 'str'> or <class 'bool'>
 		'''
 		THRESHOLD = 0.60
 
@@ -118,18 +121,19 @@ class FindUnion:
 			return VALUE
 		return False
 
-	def __getDirectionData(self, DIRECTION=0, isLast=False):
+	def __getDirectionData(self, DIRECTION: int=0, isLast: bool=False) -> list:
 		'''
-		# get data for a given direction
+		Get data for a given direction
 
+		# Params:
 		DIRECTION = 0 = left\n
 		DIRECTION = 1 = top\n
 		DIRECTION = 2 = width\n
-		DIRECTION = 3 = height
+		DIRECTION = 3 = height\n
+		isLast - if the last list being appended
 
-		@param <class 'int'>\n
-		@param <class 'bool>\n
-		@return <class 'list'>
+		# Returns:
+		list of data points that are the needed in the cropping values
 		'''
 		data = []
 
@@ -142,14 +146,13 @@ class FindUnion:
 
 		return data
 
-	def __reduceDimension(self, INDEX, DIRECTION=0):
+	def __reduceDimension(self, INDEX: int, DIRECTION: int=0):
 		'''
 		# Take each left, top, width, height multi-dimensional list and
 		# reduce them to a 1D list
 
-		@param <class 'int'>\n
-		@param <class 'int'>\n
-		@return <class 'int'> or <class 'str'>
+		# Returns:
+		<class 'int'> or <class 'str'>
 		'''
 		direction = []
 
@@ -169,10 +172,7 @@ class FindUnion:
 				lowest = direction[i][INDEX]
 		return lowest
 
-	def __setValues(self, isFirst=True):
-		'''
-		@param <class 'bool'>
-		'''
+	def __setValues(self, isFirst: bool=True) -> None:
 		if isFirst:
 			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
 				self.__croppingValues[i] = self.__orignalCroppingValues[i]
@@ -180,17 +180,17 @@ class FindUnion:
 			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
 				self.__croppingValues1[i] = self.__orignalCroppingValues[i]
 
-	def findUnion(self):
+	def findUnion(self) -> None:
 		self.__left = []
 		self.__top = []
 		self.__width = []
 		self.__height = []
-		# NUM_OF_QUESTIONS = 13 # 25
+		self.__NUM_OF_QUESTIONS = 100
 
 		# META DATA CONSTANT
 		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // self.__NUM_OF_QUESTIONS
 		
-		if self.__USERS_SURVEYED <= 1:
+		if self.__USERS_SURVEYED < 2:
 			shutil.rmtree(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
 			shutil.rmtree(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
 			shutil.rmtree(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")

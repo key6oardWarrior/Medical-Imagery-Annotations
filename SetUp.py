@@ -16,13 +16,16 @@ class Setup:
 		while os.path.isdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}"):
 			self.__resources.folderCnt += 1
 
-	def __wantNewFile(self, msg, i):
+	def __wantNewFile(self, msg: str, i: int) -> bool:
 		'''
-		# If user does not want to replace file return false
+		If user does not want to replace file return false
 
-		@param <class 'str'> message to user\n
-		@param <class 'int'> index of file in question\n
-		@return <class 'bool'> true if user wants a new file
+		# Params:
+		msg - message to user\n
+		i - index of file in question
+
+		# Returns:
+		true if user wants a new file
 		'''
 		print(msg)
 
@@ -35,7 +38,7 @@ class Setup:
 			return False
 		return True
 
-	def __checkFiles(self):
+	def __checkFiles(self) -> None:
 		self.__files = input("Enter each file path seprated by a white space: ").split(" ")
 
 		i = 0
@@ -49,26 +52,16 @@ class Setup:
 					self.__files[i] = input("Enter name of new file: ")
 			else:
 				i += 1
-	
-	def __getUsers(self):
-		numUsers = input("Enter the number of questions each user was asked: ")
-		
-		while numUsers.isnumeric() == False:
-			print("Must enter a number")
-			numUsers = input("Enter the number of questions each user was asked: ")
-		return int(numUsers)
 
-	def start(self):
+	def start(self) -> None:
 		os.mkdir(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
 		os.mkdir(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
 		os.mkdir(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
 
 		self.__checkFiles()
-		numQuestions = self.__getUsers()
 
 		for i in self.__files:
-			fileData = pd.read_csv(i)
-			getData = GetData(self.__resources, fileData)
+			getData = GetData(self.__resources, i)
 
 			downloadImagesThread = threading.Thread(target=getData.downloadImages, args=(), daemon=True)
 			conceptIDsThread = threading.Thread(target=getData.getResponces, args=(), daemon=True)
@@ -77,7 +70,7 @@ class Setup:
 			conceptIDsThread.start()
 			downloadImagesThread.start()
 
-			union = FindUnion(self.__resources, fileData, downloadImagesThread, numQuestions)
+			union = FindUnion(self.__resources, i, downloadImagesThread)
 			union.findUnion()
 
 			conceptIDsThread.join()
