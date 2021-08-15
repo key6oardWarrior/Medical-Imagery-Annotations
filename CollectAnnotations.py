@@ -37,7 +37,7 @@ class CollectAnnotations:
 			if "-s" == self.argv[-2]:
 				self.__resources = Singleton.getInstance(self.argv[-1])
 			else:
-				raise ValueError("argument \"-p\" is not in correct index")
+				raise ValueError("argument \"-s\" is not in correct index")
 			
 			if os.path.isdir(self.argv[-1]) == False:
 				raise ValueError(f"{self.argv[-1]} is not a valid dir")
