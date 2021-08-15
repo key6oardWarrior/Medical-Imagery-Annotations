@@ -9,7 +9,7 @@
 <ol>
 	<li>To run the code run: <code>py3 CollectAnnotations.py fileLocation.csv</code>. <b>*NOTE*</b> Substitute <code>py</code> with whatever your system requires to run python.</li>
 	<li>CollectAnnotations.py <b>MUST</b> recieve  at least one command line argument. Each argument <b>MUST</b> be a csv file.</li>
-	<li>There are three optional arguments -o, -p, -h. -h means Help. If -h is anywhere in the list of args a help message is printed, then the python <b>WILL</b> exit with error code 0. -o is the number of questions that was asked to each user. -p is the location of a folder must where all the results will be saved. If -o and -p are used at the time then -o must supersede -p</li>
+	<li>There are three optional arguments -o, -s, -h. -h means Help. If -h is anywhere in the list of args a help message is printed, then the python <b>WILL</b> exit with error code 0. -o is the number of questions that was asked to each user. -s is the location of a folder must where all the results will be saved. If -o and -s are used at the time then -o must supersede -s</li>
 	<li>Example: <code>py3 CollectAnnotations.py fileLocation.csv fileLocation2.csv -o 25 -a \otherFileLocation\</code></li>
 	<li>Example: <code>py3 CollectAnnotations.py -h</code></li>
 </ol>

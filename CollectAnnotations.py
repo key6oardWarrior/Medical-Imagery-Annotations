@@ -31,10 +31,10 @@ class CollectAnnotations:
 				if sys.argv[-1].isnumeric() == False:
 					raise ValueError(f"-o argument {sys.argv[-1]} is not numeric")
 
-		if "-p" in sys.argv:
+		if "-s" in sys.argv:
 			if self.__stop == len(sys.argv):
-				self.__stop = sys.argv.index("-p")
-			if "-p" == self.argv[-2]:
+				self.__stop = sys.argv.index("-s")
+			if "-s" == self.argv[-2]:
 				self.__resources = Singleton.getInstance(self.argv[-1])
 			else:
 				raise ValueError("argument \"-p\" is not in correct index")
