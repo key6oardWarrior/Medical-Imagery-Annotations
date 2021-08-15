@@ -18,7 +18,7 @@ class Singleton(object):
 		# This constructor is private. Use Singleton.getInstance()
 		'''
 		assert(createKey == Singleton.__createKey), \
-			"Singleton objects must be created using Singleton.getInstance()"
+			"Singleton objects must be created using Singleton.getInstance(PATH)"
 
 		if sys.platform == "win32":
 			self.slash = "\\"
