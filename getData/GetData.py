@@ -14,6 +14,7 @@ class GetData:
 		'''
 		self.__resources = RESOURCES
 		self.__FILE_DATA = pd.read_csv(FILE_DATA)
+		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 	def __getIDs(self) -> None:
 		'''
@@ -60,12 +61,12 @@ class GetData:
 			conceptIDs[KEYWORD1].append(inputKeyword)
 			boundingBoxes["Bouding Boxes"].append(allData[:4])
 
-		pd.DataFrame(conceptIDs).to_csv(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}\\filteredConceptIDs.csv", sep=",")
-		pd.DataFrame(boundingBoxes).to_csv(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}\\boundingBoxes.csv", sep=",")
+		pd.DataFrame(conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",")
+		pd.DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",")
 
 	def downloadImages(self) -> None:
 		userData = {}
-		IMAGE_FILE = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\"
+		IMAGE_FILE = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
 		KEYWORD = "Input.image_url"
 		KEYWORD1 = "Answer.Keyword"
 		prev = ""
@@ -99,4 +100,4 @@ class GetData:
 				prev = i
 
 		imagesDataFrame = pd.DataFrame(userData)
-		imagesDataFrame.to_csv(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}\\filteredResults.csv", sep=",")
+		imagesDataFrame.to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")

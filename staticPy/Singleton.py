@@ -1,5 +1,6 @@
 import os
-from staticPy.ClusterData import ClusterData
+import sys
+from staticPy.ClusterData import *
 
 class Singleton(object):
 	'''
@@ -8,32 +9,41 @@ class Singleton(object):
 	'''
 	__createKey = object()
 	__instance = None
+	slash = ""
 	folderCnt = 0
 	ids = []
 
-	def __init__(self, createKey):
+	def __init__(self, createKey, PATH):
 		'''
 		# This constructor is private. Use Singleton.getInstance()
 		'''
 		assert(createKey == Singleton.__createKey), \
 			"Singleton objects must be created using Singleton.getInstance()"
-		
-		FILE_PATH = os.path.dirname(__file__)
-		INDEX = FILE_PATH.rindex("\\")
-		self.PATH = f"{FILE_PATH[:INDEX]}\\results"
 
-		if os.path.isdir(self.PATH) == False:
-			os.mkdir(self.PATH)
+		if sys.platform == "win32":
+			self.slash = "\\"
+		else:
+			self.slash = "/"
+
+		if PATH == "":
+			self.PATH = os.getcwd()
+		else:
+			self.PATH = PATH
+
+		RESULTS = f"{self.PATH}{self.slash}results"
+
+		if os.path.isdir(RESULTS) == False:
+			os.mkdir(RESULTS)
 
 	@classmethod
-	def getInstance(cls, isTest=None) -> Singleton:
+	def getInstance(cls, PATH=""):
 		'''
 		@return <class '__main__.Singleton'> the only instance of Singleton
 		that will ever exist
 		'''
 
 		if cls.__instance == None:
-			cls.__instance = Singleton(cls.__createKey)
+			cls.__instance = Singleton(cls.__createKey, PATH)
 
 		cls.dataCluster = ClusterData(cls.__instance)
 

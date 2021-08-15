@@ -7,7 +7,7 @@ class FindUnion:
 	Find the union between all the user data given. Then use the data
 	to crop an image
 	'''
-	def __init__(self, RESOURCES, fileData, THREAD):
+	def __init__(self, RESOURCES, fileData, THREAD, QUESTIONS=100):
 		'''
 		Get all the cropping values given from user.
 
@@ -18,6 +18,8 @@ class FindUnion:
 		'''
 		self.__resources = RESOURCES
 		self.__THREAD = THREAD
+		self.__NUM_OF_QUESTIONS = QUESTIONS
+		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 		self.__orignalCroppingValues = {}
 		KEYWORD = "Answer.annotation_data"
@@ -62,7 +64,7 @@ class FindUnion:
 		'''
 		left = []
 		top = []
-		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\"
+		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
 		KEYWORD = "Input.image_url"
 		cnt = 0
 
@@ -89,14 +91,14 @@ class FindUnion:
 			except: # just incase of edge case
 				pass
 			else:
-				cv2.imwrite(f"{PATH}croppedImages\\{i}.jpg", cropped)
+				cv2.imwrite(f"{PATH}croppedImages{self.__resources.slash}{i}.jpg", cropped)
 				# cv2.imshow(f"{PATH}{i}.jpg", image) # to veiw the og image
-				# cv2.imshow(f"{PATH}croppedImages\\{i}.jpg", cropped) # to view cropped image
+				# cv2.imshow(f"{PATH}croppedImages{self.__resources.slash}{i}.jpg", cropped) # to view cropped image
 				# print(image.shape) # og image size
 				# print(cropped.shape) # new image size
 				# cv2.waitKey(0) # uncomment to view images
 				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(j.strip(), f"{PATH}croppedImages\\{i}.jpg")
+					self.__resources.dataCluster.appendValue(j.strip(), f"{PATH}croppedImages{self.__resources.slash}{i}.jpg")
 			
 		print("Cropping complete")
 
@@ -185,15 +187,14 @@ class FindUnion:
 		self.__top = []
 		self.__width = []
 		self.__height = []
-		self.__NUM_OF_QUESTIONS = 100
 
 		# META DATA CONSTANT
 		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // self.__NUM_OF_QUESTIONS
 		
 		if self.__USERS_SURVEYED < 2:
-			shutil.rmtree(f"{self.__resources.PATH}\\images{self.__resources.folderCnt}")
-			shutil.rmtree(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}")
-			shutil.rmtree(f"{self.__resources.PATH}\\boundingBoxes{self.__resources.folderCnt}")
+			shutil.rmtree(f"{self.__PATH}images{self.__resources.folderCnt}")
+			shutil.rmtree(f"{self.__PATH}filtered{self.__resources.folderCnt}")
+			shutil.rmtree(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}")
 			raise RuntimeError("The number of users surveyed must be more than one")
 
 		'''

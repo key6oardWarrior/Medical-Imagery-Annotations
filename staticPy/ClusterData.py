@@ -9,14 +9,15 @@ class ClusterData:
 	'''
 	__cluster = {}
 
-	def __init__(self, RESOURCES: Singleton):
+	def __init__(self, RESOURCES):
 		self.__resources = RESOURCES
+		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 	def __groupImages(self) -> None:
 		'''
 		Group images that have the same concept id in the same folder
 		'''
-		PATH = f"{self.__resources.PATH}\\images{self.__resources.folderCnt}\\simular"
+		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}simular"
 
 		# create dir the dir name will be the concept id
 		if os.path.isdir(PATH) == False:
@@ -84,5 +85,5 @@ class ClusterData:
 				if appendAmount > 0:
 					self.__cluster[i].extend(["N/A"]*appendAmount)
 
-		pd.DataFrame(self.__cluster).to_csv(f"{self.__resources.PATH}\\filtered{self.__resources.folderCnt}\\clusteredData.csv", sep=",")
+		pd.DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
 		self.__groupImages()
