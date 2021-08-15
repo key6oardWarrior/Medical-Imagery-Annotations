@@ -7,7 +7,7 @@ from getData.GetData import *
 from getData.FindUnion import *
 from staticPy.Singleton import *
 
-class Setup:
+class CollectAnnotations:
 	def __init__(self):
 		if len(sys.argv) < 2:
 			raise ValueError("Zero command line arguments were passed, but expected at least 1")
@@ -95,5 +95,5 @@ class Setup:
 			conceptIDsThread.join()
 			self.__resources.folderCnt += 1
 
-setup = Setup()
+setup = CollectAnnotations()
 setup.start()
