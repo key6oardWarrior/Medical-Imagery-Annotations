@@ -91,9 +91,9 @@ class CollectAnnotations:
 			downloadImagesThread.start()
 			union = None
 
-			if "-o" == sys.argv[-2]:
+			if "-o" in sys.argv:
 				union = FindUnion(self.__resources, i, downloadImagesThread,
-					int(sys.argv[-1]))
+					int(sys.argv[sys.argv.index("-o") + 1]))
 			else:
 				union = FindUnion(self.__resources, i, downloadImagesThread)
 			union.findUnion()
