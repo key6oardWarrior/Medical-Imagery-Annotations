@@ -15,32 +15,20 @@ class CollectAnnotations:
 		if "-h" in sys.argv:
 			print("command line args: -o [number of questions given to EACH user] -p [folder to save data]")
 			sys.exit(0)
-		
-		self.__stop = len(sys.argv)
 
 		if "-o" in sys.argv:
-			self.__stop = sys.argv.index("-o")
+			num = sys.argv.index("-o") + 1
 
-			if "-o" != sys.argv[-2]:
-				if "-o" != sys.argv[-4]:
-					raise ValueError("argument \"-o\" not in correct index")
-				else:
-					if sys.argv[-3].isnumeric() == False:
-						raise ValueError(f"-o {sys.argv[-3]} argument is not numeric")
-			else:
-				if sys.argv[-1].isnumeric() == False:
-					raise ValueError(f"-o argument {sys.argv[-1]} is not numeric")
+			if sys.argv[num].isnumeric() == False:
+				raise ValueError(f"-o {sys.argv[num]} argument is not numeric")
 
 		if "-s" in sys.argv:
-			if self.__stop == len(sys.argv):
-				self.__stop = sys.argv.index("-s")
-			if "-s" == self.argv[-2]:
-				self.__resources = Singleton.getInstance(self.argv[-1])
-			else:
-				raise ValueError("argument \"-s\" is not in correct index")
-			
-			if os.path.isdir(self.argv[-1]) == False:
-				raise ValueError(f"{self.argv[-1]} is not a valid dir")
+			filePath = sys.argv.index("-s") + 1
+
+			if os.path.isdir(self.argv[filePath]) == False:
+				raise ValueError(f"{self.argv[filePath]} is not a valid dir")
+
+			self.__resources = Singleton.getInstance(self.argv[filePath])
 		else:
 			self.__resources = Singleton.getInstance()
 

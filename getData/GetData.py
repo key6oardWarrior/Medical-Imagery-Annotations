@@ -1,4 +1,5 @@
 import wget
+import numpy as np
 import pandas as pd
 
 class GetData:
@@ -44,13 +45,17 @@ class GetData:
 
 		for i in self.__FILE_DATA[KEYWORD]:
 			try:
-				self.__allIDs = i.split("|")
+				self.__allIDs = np.array(i.split("|"))
 			except AttributeError:
 				self.__ids.append("N/A")
 			except: # just incase of edge cases
 				self.__ids.append("N/A")
 			else:
-				self.__getIDs()
+				if ":" in self.__allIDs:
+					self.__allIDs = np.delete(self.__allIDs, np.where(self.__allIDs[:] == ""))
+					self.__getIDs()
+				else:
+					self.__ids.append("N/A")
 			conceptIDs["Concept IDs"].append(self.__ids)
 			self.__resources.ids.append(self.__ids)
 
