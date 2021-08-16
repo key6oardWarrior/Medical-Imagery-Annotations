@@ -33,8 +33,17 @@ class CollectAnnotations:
 			self.__resources = Singleton.getInstance()
 
 		index = 0
+		isContinue = False
 		# check each file to ensure it exists
-		for filePath in sys.argv[1: self.__stop]:
+		for filePath in sys.argv[1:]:
+			if((filePath == "-o") or (filePath == "-s")):
+				isContinue = True
+				continue
+
+			if isContinue:
+				isContinue = False
+				continue
+
 			while os.path.exists(filePath) == False:
 				del sys.argv[index]
 
@@ -60,7 +69,16 @@ class CollectAnnotations:
 		os.mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}filtered{self.__resources.folderCnt}")
 		os.mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}boundingBoxes{self.__resources.folderCnt}")
 
-		for i in sys.argv[1: self.__stop]:
+		isContinue = False
+		for i in sys.argv[1:]:
+			if((i == "-o") or (i == "-s")):
+				isContinue = True
+				continue
+
+			if isContinue:
+				isContinue = False
+				continue
+
 			getData = GetData(self.__resources, i)
 
 			downloadImagesThread = threading.Thread(
