@@ -13,7 +13,7 @@ class CollectAnnotations:
 			raise ValueError("Zero command line arguments were passed, but expected at least 1")
 		
 		if "-h" in sys.argv:
-			print("command line args: -o [number of questions given to EACH user] -p [folder to save data]")
+			print("command line args: -o [number of questions given to EACH user] -s [folder to save data]")
 			sys.exit(0)
 
 		if "-o" in sys.argv:
