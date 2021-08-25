@@ -1,5 +1,6 @@
-# launch debug file
+# other files
 launch.json
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
