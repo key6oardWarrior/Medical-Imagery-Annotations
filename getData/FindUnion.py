@@ -100,17 +100,15 @@ class FindUnion:
 
 		return max(localDir) if len(localDir) > 0 else -1
 	
-	def __find(self, START: int, STOP: int, DIRECTION: str="left") -> None:
+	def __find(self, DIRECTION: str="left") -> None:
 		'''
 		Find all the data points within a range of indexes
 
 		# Params:
-		START - what index in the Dataframe to start at\n
-		STOP - what index to stop at in the Dataframe
 		DIRECTION - left, width, heigth, or top
 		'''
 		SIZE = len(DIRECTION) + 2
-		for ii in self.__directionData.loc[START: STOP, "Answer.annotation_data"]:
+		for ii in self.__directionData["Answer.annotation_data"]:
 			index = ii.index(DIRECTION) + SIZE
 			self.__dir.append(int(ii[index: ii.index(",", index)]))
 
@@ -120,27 +118,25 @@ class FindUnion:
 		'''
 		self.__dir = []
 		ogLocation = ""
-		cnt, prevCnt = 0, 0
 
-		for image in self.__imageLocations["Input.image_url"]:
+		for imageL in self.__imageLocations["Input.image_url"]:
 			if ogLocation == "": # find all data points that need to be collected
-				ogLocation = image
+				ogLocation = imageL
 
-			elif ogLocation != image: # collect only the needed data points
-				ogLocation = image
+			elif ogLocation != imageL: # collect only the needed data points
+				ogLocation = imageL
 
-				self.__find(prevCnt, cnt)
+				self.__find()
 				self.__directions["Left"].append(self.__compare())
 
-				self.__find(prevCnt, cnt, "top")
+				self.__find("top")
 				self.__directions["Top"].append(self.__compare())
 
-				self.__find(prevCnt, cnt, "width")
+				self.__find("width")
 				self.__directions["Width"].append(self.__compare())
 
-				self.__find(prevCnt, cnt, "height")
+				self.__find("height")
 				self.__directions["Height"].append(self.__compare())
-				prevCnt = cnt
 
-		print("Done collecting data\n")
+		print("\nDone collecting data\n")
 		self.__crop()
