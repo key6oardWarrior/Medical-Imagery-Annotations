@@ -1,7 +1,6 @@
 import os
 import sys
 import threading
-import pandas as pd
 
 from getData.GetData import *
 from getData.FindUnion import *
@@ -11,16 +10,10 @@ class CollectAnnotations:
 	def __init__(self):
 		if len(sys.argv) < 2:
 			raise ValueError("Zero command line arguments were passed, but expected at least 1")
-		
+
 		if "-h" in sys.argv:
-			print("command line args: -o [number of questions given to EACH user] -s [folder to save data]")
+			print("command line args: -s [folder to save data to]")
 			sys.exit(0)
-
-		if "-o" in sys.argv:
-			num = sys.argv.index("-o") + 1
-
-			if sys.argv[num].isnumeric() == False:
-				raise ValueError(f"-o {sys.argv[num]} argument is not numeric")
 
 		if "-s" in sys.argv:
 			filePath = sys.argv.index("-s") + 1
@@ -36,7 +29,7 @@ class CollectAnnotations:
 		isContinue = False
 		# check each file to ensure it exists
 		for filePath in sys.argv[1:]:
-			if((filePath == "-o") or (filePath == "-s")):
+			if filePath == "-s":
 				isContinue = True
 				continue
 
@@ -71,7 +64,7 @@ class CollectAnnotations:
 
 		isContinue = False
 		for i in sys.argv[1:]:
-			if((i == "-o") or (i == "-s")):
+			if i == "-s":
 				isContinue = True
 				continue
 
@@ -91,14 +84,13 @@ class CollectAnnotations:
 			downloadImagesThread.start()
 			union = None
 
-			if "-o" in sys.argv:
-				union = FindUnion(self.__resources, i, downloadImagesThread,
-					int(sys.argv[sys.argv.index("-o") + 1]))
-			else:
-				union = FindUnion(self.__resources, i, downloadImagesThread)
+			conceptIDsThread.join()
+			downloadImagesThread.join()
+			union = FindUnion(self.__resources, i)
 			union.findUnion()
 
-			conceptIDsThread.join()
+			getData.createCluster()
+
 			self.__resources.folderCnt += 1
 
 setup = CollectAnnotations()

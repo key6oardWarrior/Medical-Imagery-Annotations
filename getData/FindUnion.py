@@ -1,255 +1,146 @@
 import os
-import cv2
-import shutil
+import pandas as pd
+from PIL import Image
 
 class FindUnion:
 	'''
 	Find the union between all the user data given. Then use the data
 	to crop an image
 	'''
-	def __init__(self, RESOURCES, fileData, THREAD, QUESTIONS=100):
+	def __init__(self, RESOURCES, fileLocation: str):
 		'''
 		Get all the cropping values given from user.
 
 		# Params:
-		<class '__main__.Singleton'>\n
-		<class 'pandas.core.frame.DataFrame'> file data dataframe\n
-		<class 'threading.Thread'> downloading images thread
+		RESOURCES - Singleton pattern\n
+		fileLocation - the location of the directional data
 		'''
 		self.__resources = RESOURCES
-		self.__THREAD = THREAD
-		self.__NUM_OF_QUESTIONS = QUESTIONS
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
+		self.__directions = {
+			"Left": [],
+			"Width": [],
+			"Height": [],
+			"Top": []
+		}
 
-		self.__orignalCroppingValues = {}
-		KEYWORD = "Answer.annotation_data"
-		cnt = 0
-
-		import pandas as pd
-		fileData = pd.read_csv(fileData)
-
-		for i in fileData[KEYWORD]:
-			self.__getCropHelper(i)
-			self.__orignalCroppingValues[cnt] = self.__tempValues
-			cnt += 1
-
-	def __getCropHelper(self, DATA: str) -> None:
-		'''
-		Find numbers in self.FILE_DATA[KEYWORD][DATA] and add each number to a list.
-
-		# Params:
-		DATA - string that may contains the needed data
-		'''
-		self.__tempValues = []
-		temp = ""
-
-		for i in range(len(DATA)-1):
-			if DATA[i].isnumeric():
-				temp += DATA[i]
-
-			if((temp != "") and (DATA[i+1].isnumeric() == False)):
-				try:
-					self.__tempValues.append(int(temp.replace(" ", "")))
-				except ValueError:
-					pass
-				except: # just incase of edge case
-					pass
-				finally:
-					temp = ""
+		self.__directionData = pd.read_csv(fileLocation)
+		self.__imageLocations = pd.read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv")
 
 	def __crop(self) -> None:
 		'''
 		Crop each image based on the directional values
 		found in left, top, width, and height
 		'''
-		left = []
-		top = []
 		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
-		KEYWORD = "Input.image_url"
-		cnt = 0
 
 		print("\n")
 		os.mkdir(f"{PATH}croppedImages")
-
-		self.__THREAD.join()
 		print("\nCroping images now\n")
 
-		for i in range(len(self.__newLeft)):
-			if type(self.__newLeft[i]) != int:
-				continue
-			if type(self.__newTop[i]) != int:
+		cnt = 0
+		for ii in self.__imageLocations["Input.image_url"]:
+			# crop image
+			image = Image.open(ii)
+			top = self.__directions["Top"][cnt]
+			height = self.__directions["Height"][cnt]
+			left = self.__directions["Left"][cnt]
+			width = self.__directions["Width"][cnt]
+
+			if((top < 0) or (left < 0) or (width < 0) or (height < 0)):
+				cnt += 1
 				continue
 
-			image = cv2.imread(f"{PATH}{i}.jpg")
-			left = (self.__newLeft[i]) if self.__newLeft[i] > 0 else 1
-			top = (self.__newTop[i]) if self.__newTop[i] > 0 else 1
+			if height < top:
+				temp = height
+				height = top
+				top = temp
 
-			try:
-				cropped = image[top: len(image[0]), left: len(image[0])]
-			except TypeError:
-				pass
-			except: # just incase of edge case
-				pass
-			else:
-				cv2.imwrite(f"{PATH}croppedImages{self.__resources.slash}{i}.jpg", cropped)
-				# cv2.imshow(f"{PATH}{i}.jpg", image) # to veiw the og image
-				# cv2.imshow(f"{PATH}croppedImages{self.__resources.slash}{i}.jpg", cropped) # to view cropped image
-				# print(image.shape) # og image size
-				# print(cropped.shape) # new image size
-				# cv2.waitKey(0) # uncomment to view images
-				for j in self.__resources.ids[i]:
-					self.__resources.dataCluster.appendValue(j.strip(), f"{PATH}croppedImages{self.__resources.slash}{i}.jpg")
-			
+			if left < width:
+				temp = left
+				left = width
+				width = temp
+
+			if left == width:
+				left += 1
+
+			if top == height:
+				height += 1
+
+			cropped = image.crop((width, top, left, height))
+			cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
+
+			cnt += 1
+
 		print("Cropping complete")
 
-	def __helper(self, VALUE: int, VALUE1: int):
+	def __compare(self) -> int:
 		'''
-		Determin which value is bigger and if the smaller value is
-		within the threshold of the bigger value. If the
-		smaller value is not within the threshold, then return
-		"No union found" else return the smaller value.
+		Find the avg of each value, then check to ensure that the value is
+		within a threshold and if it is store it in a list.
 
 		# Returns:
-		<class 'str'> or <class 'bool'>
+		The largest in self.__dir that is >= SMALL_AVG and >= BIG_AVG
 		'''
-		THRESHOLD = 0.60
+		total = 0
+		localDir = []
 
-		if VALUE > VALUE1:
-			if((VALUE1 >= (VALUE * THRESHOLD)) and (VALUE1 <= VALUE)):
-				return VALUE1
-			return False
+		for num in self.__dir:
+			total += num
 
-		if((VALUE >= (VALUE1 * THRESHOLD)) and (VALUE <= VALUE1)):
-			return VALUE
-		return False
+		AVG = total / len(self.__dir)
+		SMALL_AVG = AVG * 0.6
+		BIG_AVG = AVG / 0.6
 
-	def __getDirectionData(self, DIRECTION: int=0, isLast: bool=False) -> list:
+		for num in self.__dir:
+			if((num >= SMALL_AVG) and (num <= BIG_AVG)):
+				localDir.append(num)
+
+		self.__dir = []
+
+		return max(localDir) if len(localDir) > 0 else -1
+	
+	def __find(self, START: int, STOP: int, DIRECTION: str="left") -> None:
 		'''
-		Get data for a given direction
+		Find all the data points within a range of indexes
 
 		# Params:
-		DIRECTION = 0 = left\n
-		DIRECTION = 1 = top\n
-		DIRECTION = 2 = width\n
-		DIRECTION = 3 = height\n
-		isLast - if the last list being appended
-
-		# Returns:
-		list of data points that are the needed in the cropping values
+		START - what index in the Dataframe to start at\n
+		STOP - what index to stop at in the Dataframe
+		DIRECTION - left, width, heigth, or top
 		'''
-		data = []
-
-		for i in self.__croppingValues.keys():
-			value = self.__croppingValues[i][DIRECTION]
-			temp = (i - 1) if isLast else (i + 1)
-			value1 = self.__croppingValues1[temp][DIRECTION]
-
-			data.append(self.__helper(value, value1))
-
-		return data
-
-	def __reduceDimension(self, INDEX: int, DIRECTION: int=0):
-		'''
-		# Take each left, top, width, height multi-dimensional list and
-		# reduce them to a 1D list
-
-		# Returns:
-		<class 'int'> or <class 'str'>
-		'''
-		direction = []
-
-		if DIRECTION == 0:
-			direction = self.__left
-		elif DIRECTION == 1:
-			direction = self.__top
-		elif DIRECTION == 2:
-			direction = self.__width
-		else:
-			direction = self.__height
-
-		lowest = direction[0][INDEX]
-
-		for i in range(1, len(direction)):
-			if((type(lowest) == bool) or (type(direction[i][INDEX]) == int)):
-				lowest = direction[i][INDEX]
-		return lowest
-
-	def __setValues(self, isFirst: bool=True) -> None:
-		if isFirst:
-			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
-				self.__croppingValues[i] = self.__orignalCroppingValues[i]
-		else:
-			for i in range(self.__start, self.__end, self.__USERS_SURVEYED):
-				self.__croppingValues1[i] = self.__orignalCroppingValues[i]
+		SIZE = len(DIRECTION) + 2
+		for ii in self.__directionData.loc[START: STOP, "Answer.annotation_data"]:
+			index = ii.index(DIRECTION) + SIZE
+			self.__dir.append(int(ii[index: ii.index(",", index)]))
 
 	def findUnion(self) -> None:
-		self.__left = []
-		self.__top = []
-		self.__width = []
-		self.__height = []
-
-		# META DATA CONSTANT
-		self.__USERS_SURVEYED = len(self.__orignalCroppingValues.keys()) // self.__NUM_OF_QUESTIONS
-		
-		if self.__USERS_SURVEYED < 2:
-			shutil.rmtree(f"{self.__PATH}images{self.__resources.folderCnt}")
-			shutil.rmtree(f"{self.__PATH}filtered{self.__resources.folderCnt}")
-			shutil.rmtree(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}")
-			raise RuntimeError("The number of users surveyed must be more than one")
-
 		'''
-		this allows each user's responces to be compared to each
-		other and then find the union
+		Find the union between all the data points.
 		'''
-		stop = 0
-		isEven = True
-		if self.__USERS_SURVEYED % 2 == 0:
-			stop = int(self.__USERS_SURVEYED / 2)
-		else:
-			stop = int((self.__USERS_SURVEYED+1) / 2)
-			isEven = False
+		self.__dir = []
+		ogLocation = ""
+		cnt, prevCnt = 0, 0
 
-		for cnt in range(stop):
-			self.__croppingValues = {}
-			self.__start = (self.__start + 1) if cnt != 0 else 0
-			self.__end = (self.__end + 1) if cnt != 0 else self.__NUM_OF_QUESTIONS*self.__USERS_SURVEYED
+		for image in self.__imageLocations["Input.image_url"]:
+			if ogLocation == "": # find all data points that need to be collected
+				ogLocation = image
 
-			self.__setValues()
+			elif ogLocation != image: # collect only the needed data points
+				ogLocation = image
 
-			if((isEven) or (cnt < (stop - 1))):
-				self.__croppingValues1 = {}
-				self.__start += 1
-				self.__end += 1
+				self.__find(prevCnt, cnt)
+				self.__directions["Left"].append(self.__compare())
 
-				self.__setValues(False)
+				self.__find(prevCnt, cnt, "top")
+				self.__directions["Top"].append(self.__compare())
 
-				self.__left.append(self.__getDirectionData())
-				self.__top.append(self.__getDirectionData(1))
-				self.__width.append(self.__getDirectionData(2))
-				self.__height.append(self.__getDirectionData(3))
-			else:
-				self.__left.append(self.__getDirectionData(isLast=True))
-				self.__top.append(self.__getDirectionData(1, True))
-				self.__width.append(self.__getDirectionData(2, True))
-				self.__height.append(self.__getDirectionData(3, True))
+				self.__find(prevCnt, cnt, "width")
+				self.__directions["Width"].append(self.__compare())
 
-		if self.__USERS_SURVEYED > 2:
-			self.__newLeft = []
-			self.__newTop = []
-			self.__newWidth = []
-			self.__newHeight = []
-
-			for i in range(len(self.__left[0])):
-				self.__newLeft.append(self.__reduceDimension(i))
-				self.__newTop.append(self.__reduceDimension(i, 1))
-				self.__newWidth.append(self.__reduceDimension(i, 2))
-				self.__newHeight.append(self.__reduceDimension(i, 3))
-		else:
-			self.__newLeft = self.__left[0]
-			self.__newTop = self.__top[0]
-			self.__newWidth = self.__width[0]
-			self.__newHeight = self.__height[0]
+				self.__find(prevCnt, cnt, "height")
+				self.__directions["Height"].append(self.__compare())
+				prevCnt = cnt
 
 		print("Done collecting data\n")
 		self.__crop()
-		self.__resources.dataCluster.makeCluster()

@@ -11,7 +11,6 @@ class Singleton(object):
 	__instance = None
 	slash = ""
 	folderCnt = 0
-	ids = []
 
 	def __init__(self, createKey, PATH):
 		'''

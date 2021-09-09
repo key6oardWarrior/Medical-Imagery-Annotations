@@ -34,7 +34,7 @@ class ClusterData:
 					continue
 
 				shutil.copy2(i, FILE)
-		
+
 		print("Clustering complete")
 
 	def put(self, KEY: str) -> None:
@@ -58,7 +58,7 @@ class ClusterData:
 		'''
 		if KEY in self.__cluster.keys():
 			self.__cluster[KEY].append(VALUE)
-	
+
 	def makeCluster(self) -> None:
 		'''
 		Cluster all data then save it in a comma delimited csv file
@@ -87,3 +87,11 @@ class ClusterData:
 
 		pd.DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
 		self.__groupImages()
+	
+	@property
+	def getClusterKeys(self) -> dict.keys:
+		'''
+		# Returns:
+		All of the concept ids that are used as keys in the cluster
+		'''
+		return self.__cluster.keys()

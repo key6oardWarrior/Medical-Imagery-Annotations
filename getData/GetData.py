@@ -1,84 +1,80 @@
 import wget
-import numpy as np
 import pandas as pd
 
 class GetData:
 	'''
 	Get and format all user data from CSV_FILE
 	'''
-	__ids = []
-
-	def __init__(self, RESOURCES, FILE_DATA):
+	def __init__(self, RESOURCES, FILE_DATA: str):
 		'''
-		@param <class '__main__.Singleton'>\n
-		@param <class 'dict'> add data in the batch file
+		# Params:
+		RESOURCES - Singleton pattern\n
+		FILE_DATA - Data to be added from the batch file
 		'''
 		self.__resources = RESOURCES
 		self.__FILE_DATA = pd.read_csv(FILE_DATA)
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
-	def __getIDs(self) -> None:
+	def __getEachId(self) -> None:
 		'''
-		set self.__allIDs to an array and use ":" as a dilimmiter
-		the append each delimited peice of data to self__.ids
+		Get each concept ID and put them into the cluster
 		'''
-		self.__ids = []
-		for i in self.__allIDs:
-			index = i.index(":")
-			localID = i[:index].strip()
+		for ii in self.__splitCid:
+			index = ii.find(":")
 
-			self.__ids.append(localID)
-			self.__resources.dataCluster.put(localID)
+			if index > -1:
+				self.__resources.dataCluster.put(ii[: index])
 
 	def getResponces(self) -> None:
 		'''
 		Put all user responces in self.__FILE_DATA (<class 'dict'>), so they can
 		be put in a comma delimited csv file.
 		'''
-		conceptIDs = {
-			"Concept IDs": [],
-			"Answer.annotation_data": []
-		}
-		boundingBoxes = { "Bouding Boxes": [] }
 		KEYWORD = "Answer.Keyword"
-		KEYWORD1 = "Answer.annotation_data"
+		ANSWER = "Answer.annotation_data"
+		CONCEPT = "Concept IDs"
+		BOX = "Bouding Boxes"
+		conceptIDs = {
+			CONCEPT: [],
+			ANSWER: []
+		}
+		boundingBoxes = { BOX: [] }
 
-		for i in self.__FILE_DATA[KEYWORD]:
+		for ii in self.__FILE_DATA[KEYWORD]:
 			try:
-				self.__allIDs = np.array(i.split("|"))
+				self.__splitCid = ii.split("|")
 			except AttributeError:
-				self.__ids.append("N/A")
-			except: # just incase of edge cases
-				self.__ids.append("N/A")
+				conceptIDs[CONCEPT].append("N/A")
 			else:
-				if ":" in self.__allIDs:
-					self.__allIDs = np.delete(self.__allIDs, np.where(self.__allIDs[:] == ""))
-					self.__getIDs()
-				else:
-					self.__ids.append("N/A")
-			conceptIDs["Concept IDs"].append(self.__ids)
-			self.__resources.ids.append(self.__ids)
+				conceptIDs[CONCEPT].append(self.__splitCid)
+				self.__getEachId()
 
-		for i in self.__FILE_DATA[KEYWORD1]:
-			allData = i[2: len(i)-2].split(",")
+		for ii in self.__FILE_DATA[ANSWER]:
+			label = ii.find("label")
+			endLabel = ii.find("}", label)
 
-			inputKeyword = (allData[4].split(":"))[1]
-			conceptIDs[KEYWORD1].append(inputKeyword)
-			boundingBoxes["Bouding Boxes"].append(allData[:4])
+			if label > -1:
+				conceptIDs[ANSWER].append(ii[label + 8: endLabel])
+				boundingBoxes[BOX].append(ii[: label])
+			else:
+				conceptIDs[ANSWER].append("N/A")
+				boundingBoxes[BOX].append("N/A")
 
 		pd.DataFrame(conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",")
 		pd.DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",")
 
 	def downloadImages(self) -> None:
-		userData = {}
+		URL = "Input.image_url"
+		KEYWORD = "Answer.Keyword"
+		userData = {
+			URL: [],
+			KEYWORD: []
+		}
 		IMAGE_FILE = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
-		KEYWORD = "Input.image_url"
-		KEYWORD1 = "Answer.Keyword"
 		prev = ""
-		isKey = True
 		cnt = 0
 
-		for i in self.__FILE_DATA[KEYWORD]:
+		for i in self.__FILE_DATA[URL]:
 			if type(i) != str:
 				continue
 
@@ -87,22 +83,27 @@ class GetData:
 
 			path = f"{IMAGE_FILE}{cnt}.jpg"
 
-			if isKey:
-				userData[KEYWORD] = []
-				userData[KEYWORD1] = []
-				isKey = False
-
 			try: # if server does not respond error is not fatal
-				userData[KEYWORD].append(wget.download(i, path))
+				userData[URL].append(wget.download(i, path))
 			except:
 				print(f"\nImage {i} could not be downloaded")
+				userData[URL].append(f"Image {i} could not be downloaded")
 				userData[KEYWORD].append(f"Image {i} could not be downloaded")
-				userData[KEYWORD1].append(f"Image {i} could not be downloaded")
 			else:
-				userData[KEYWORD1].append(self.__FILE_DATA[KEYWORD1][cnt])
+				userData[KEYWORD].append(self.__FILE_DATA[KEYWORD][cnt])
 			finally:
 				cnt += 1
 				prev = i
 
 		imagesDataFrame = pd.DataFrame(userData)
 		imagesDataFrame.to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")
+
+	def createCluster(self) -> None:
+		'''
+		Cluster all images that have the same concept ID
+		'''
+		return
+		for ii in self.__resources.dataCluster.getClusterKeys:
+			pass
+
+		self.__resources.dataCluster.makeCluster()
