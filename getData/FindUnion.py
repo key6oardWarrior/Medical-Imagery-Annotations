@@ -111,6 +111,19 @@ class FindUnion:
 		for ii in self.__directionData["Answer.annotation_data"]:
 			index = ii.index(DIRECTION) + SIZE
 			self.__dir.append(int(ii[index: ii.index(",", index)]))
+	
+	def getData(self) -> None:
+		self.__find()
+		self.__directions["Left"].append(self.__compare())
+
+		self.__find("top")
+		self.__directions["Top"].append(self.__compare())
+
+		self.__find("width")
+		self.__directions["Width"].append(self.__compare())
+
+		self.__find("height")
+		self.__directions["Height"].append(self.__compare())
 
 	def findUnion(self) -> None:
 		'''
@@ -119,24 +132,26 @@ class FindUnion:
 		self.__dir = []
 		ogLocation = ""
 
-		for imageL in self.__imageLocations["Input.image_url"]:
+		'''
+		if the range soluition does not work uncomment below
+		'''
+		for ii in self.__imageLocations["Input.image_url"]:
 			if ogLocation == "": # find all data points that need to be collected
-				ogLocation = imageL
+				ogLocation = ii
 
-			elif ogLocation != imageL: # collect only the needed data points
-				ogLocation = imageL
+			elif ogLocation != ii: # collect only the needed data points
+				ogLocation = ii
 
-				self.__find()
-				self.__directions["Left"].append(self.__compare())
+				self.getData()
 
-				self.__find("top")
-				self.__directions["Top"].append(self.__compare())
+		# No idea why, but this code always does not get the last few result,
+		# so it is getting hard coded
+		SIZE = len(self.__imageLocations["Input.image_url"])
+		DIFF = len(self.__directions["Top"]) - SIZE
 
-				self.__find("width")
-				self.__directions["Width"].append(self.__compare())
-
-				self.__find("height")
-				self.__directions["Height"].append(self.__compare())
+		if DIFF < 0:
+			for imageL in range(DIFF, 0, 1):
+				self.getData()
 
 		print("\nDone collecting data\n")
 		self.__crop()

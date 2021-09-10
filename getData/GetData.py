@@ -83,7 +83,7 @@ class GetData:
 
 			path = f"{IMAGE_FILE}{cnt}.jpg"
 
-			try: # if server does not respond error is not fatal
+			try: # if server does not respond, error is not fatal
 				userData[URL].append(wget.download(i, path))
 			except:
 				print(f"\nImage {i} could not be downloaded")
@@ -102,8 +102,4 @@ class GetData:
 		'''
 		Cluster all images that have the same concept ID
 		'''
-		return
-		for ii in self.__resources.dataCluster.getClusterKeys:
-			pass
-
-		self.__resources.dataCluster.makeCluster()
+		pass
