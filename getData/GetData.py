@@ -95,8 +95,7 @@ class GetData:
 				cnt += 1
 				prev = i
 
-		imagesDataFrame = pd.DataFrame(userData)
-		imagesDataFrame.to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")
+		pd.DataFrame(userData).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")
 
 	def createCluster(self) -> None:
 		'''
