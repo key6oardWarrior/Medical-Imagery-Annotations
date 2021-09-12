@@ -16,10 +16,10 @@ class CollectAnnotations:
 		if "-s" in argv:
 			filePath = argv.index("-s") + 1
 
-			if isdir(self.argv[filePath]) == False:
+			if isdir(argv[filePath]) == False:
 				raise ValueError(f"{self.argv[filePath]} is not a valid dir")
 
-			self.__resources = Singleton.getInstance(self.argv[filePath])
+			self.__resources = Singleton.getInstance(argv[filePath])
 		else:
 			self.__resources = Singleton.getInstance()
 
