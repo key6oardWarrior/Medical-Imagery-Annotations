@@ -1,7 +1,3 @@
-import os
-import shutil
-import pandas as pd
-
 class ClusterData:
 	'''
 	Each concept ID is used as a key in __cluster
@@ -20,20 +16,24 @@ class ClusterData:
 		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}simular"
 
 		# create dir the dir name will be the concept id
-		if os.path.isdir(PATH) == False:
-			os.mkdir(PATH)
+		from os.path import isdir
+		from os.path import join
+		from os import mkdir
+		if isdir(PATH) == False:
+			mkdir(PATH)
 
+		from shutil import copy2
 		for key, value in self.__cluster.items():
-			FILE = os.path.join(PATH, key)
+			FILE = join(PATH, key)
 
-			if os.path.isdir(FILE) == False:
-				os.mkdir(FILE)
+			if isdir(FILE) == False:
+				mkdir(FILE)
 
 			for i in value:
 				if i == "N/A":
 					continue
 
-				shutil.copy2(i, FILE)
+				copy2(i, FILE)
 
 		print("Clustering complete")
 
@@ -65,7 +65,8 @@ class ClusterData:
 		and group all images that are simular
 		'''
 		print("Clustering data")
-		KEYS = list(self.__cluster.keys())
+		from numpy import array
+		KEYS = array(self.clusterKeys)
 		longestArr = 0
 
 		for i in KEYS:
@@ -85,11 +86,12 @@ class ClusterData:
 				if appendAmount > 0:
 					self.__cluster[i].extend(["N/A"]*appendAmount)
 
-		pd.DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
+		from pandas import DataFrame
+		DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
 		self.__groupImages()
 	
 	@property
-	def getClusterKeys(self) -> dict.keys:
+	def clusterKeys(self) -> dict.keys:
 		'''
 		# Returns:
 		All of the concept ids that are used as keys in the cluster

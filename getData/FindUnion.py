@@ -1,7 +1,3 @@
-import os
-import pandas as pd
-from PIL import Image
-
 class FindUnion:
 	'''
 	Find the union between all the user data given. Then use the data
@@ -24,8 +20,9 @@ class FindUnion:
 			"Top": []
 		}
 
-		self.__directionData = pd.read_csv(fileLocation)
-		self.__imageLocations = pd.read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv")
+		from pandas import read_csv
+		self.__directionData = read_csv(fileLocation)
+		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv")
 
 	def __crop(self) -> None:
 		'''
@@ -35,10 +32,12 @@ class FindUnion:
 		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
 
 		print("\n")
-		os.mkdir(f"{PATH}croppedImages")
+		from os import mkdir
+		mkdir(f"{PATH}croppedImages")
 		print("\nCroping images now\n")
 
 		cnt = 0
+		from PIL import Image
 		for ii in self.__imageLocations["Input.image_url"]:
 			# crop image
 			image = Image.open(ii)
@@ -112,7 +111,7 @@ class FindUnion:
 			index = ii.index(DIRECTION) + SIZE
 			self.__dir.append(int(ii[index: ii.index(",", index)]))
 	
-	def getData(self) -> None:
+	def __getDirData(self) -> None:
 		self.__find()
 		self.__directions["Left"].append(self.__compare())
 
@@ -142,7 +141,7 @@ class FindUnion:
 			elif ogLocation != ii: # collect only the needed data points
 				ogLocation = ii
 
-				self.getData()
+				self.__getDirData()
 
 		# No idea why, but this code always does not get the last few result,
 		# so it is getting hard coded
@@ -151,7 +150,7 @@ class FindUnion:
 
 		if DIFF < 0:
 			for imageL in range(DIFF, 0, 1):
-				self.getData()
+				self.__getDirData()
 
 		print("\nDone collecting data\n")
 		self.__crop()

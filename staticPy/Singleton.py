@@ -43,7 +43,6 @@ class Singleton(object):
 
 		if cls.__instance == None:
 			cls.__instance = Singleton(cls.__createKey, PATH)
-
-		cls.dataCluster = ClusterData(cls.__instance)
+			cls.dataCluster = ClusterData(cls.__instance)
 
 		return cls.__instance

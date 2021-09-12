@@ -1,5 +1,5 @@
-import wget
-import pandas as pd
+from pandas import read_csv
+from pandas import DataFrame
 
 class GetData:
 	'''
@@ -12,7 +12,7 @@ class GetData:
 		FILE_DATA - Data to be added from the batch file
 		'''
 		self.__resources = RESOURCES
-		self.__FILE_DATA = pd.read_csv(FILE_DATA)
+		self.__FILE_DATA = read_csv(FILE_DATA)
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 	def __getEachId(self) -> None:
@@ -60,11 +60,11 @@ class GetData:
 				conceptIDs[ANSWER].append("N/A")
 				boundingBoxes[BOX].append("N/A")
 
-		pd.DataFrame(conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",")
-		pd.DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",")
+		DataFrame(conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",")
+		DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",")
 
 	def downloadImages(self) -> None:
-		URL = "Input.image_url"
+		URL = "Image Location"
 		KEYWORD = "Answer.Keyword"
 		userData = {
 			URL: [],
@@ -74,6 +74,7 @@ class GetData:
 		prev = ""
 		cnt = 0
 
+		from wget import download
 		for i in self.__FILE_DATA[URL]:
 			if type(i) != str:
 				continue
@@ -84,7 +85,7 @@ class GetData:
 			path = f"{IMAGE_FILE}{cnt}.jpg"
 
 			try: # if server does not respond, error is not fatal
-				userData[URL].append(wget.download(i, path))
+				userData[URL].append(download(i, path))
 			except:
 				print(f"\nImage {i} could not be downloaded")
 				userData[URL].append(f"Image {i} could not be downloaded")
@@ -95,10 +96,20 @@ class GetData:
 				cnt += 1
 				prev = i
 
-		pd.DataFrame(userData).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")
+		DataFrame(userData).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", sep=",")
 
 	def createCluster(self) -> None:
 		'''
 		Cluster all images that have the same concept ID
 		'''
-		pass
+		IMAGES_CIDs = DataFrame(read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv"))
+		IMAGEL = IMAGES_CIDs["Input.image_url"]
+		CIDS = IMAGES_CIDs["Answer.Keyword"]
+		del IMAGES_CIDs
+		index = 0
+		from numpy import array
+		KEYS = array(self.__resources.dataCluster.clusterKeys)
+		cids = {}
+
+		for cid in CIDS:
+			split = array(cid.split("|"))

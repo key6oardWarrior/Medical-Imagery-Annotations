@@ -1,6 +1,5 @@
-import os
-import sys
-import threading
+from os.path import isdir
+from sys import argv
 
 from getData.GetData import *
 from getData.FindUnion import *
@@ -8,17 +7,19 @@ from staticPy.Singleton import *
 
 class CollectAnnotations:
 	def __init__(self):
-		if len(sys.argv) < 2:
+		from sys import exit
+
+		if len(argv) < 2:
 			raise ValueError("Zero command line arguments were passed, but expected at least 1")
 
-		if "-h" in sys.argv:
+		if "-h" in argv:
 			print("command line args: -s [folder to save data to]")
-			sys.exit(0)
+			exit(0)
 
-		if "-s" in sys.argv:
-			filePath = sys.argv.index("-s") + 1
+		if "-s" in argv:
+			filePath = argv.index("-s") + 1
 
-			if os.path.isdir(self.argv[filePath]) == False:
+			if isdir(self.argv[filePath]) == False:
 				raise ValueError(f"{self.argv[filePath]} is not a valid dir")
 
 			self.__resources = Singleton.getInstance(self.argv[filePath])
@@ -28,7 +29,7 @@ class CollectAnnotations:
 		index = 0
 		isContinue = False
 		# check each file to ensure it exists
-		for filePath in sys.argv[1:]:
+		for filePath in argv[1:]:
 			if filePath == "-s":
 				isContinue = True
 				continue
@@ -37,33 +38,35 @@ class CollectAnnotations:
 				isContinue = False
 				continue
 
-			while os.path.exists(filePath) == False:
-				del sys.argv[index]
+			from os.path import exists
+			while exists(filePath) == False:
+				del argv[index]
 
 				ans = input(f"File path {filePath} does not exist do you want to replace it? Y/n ")
 				if ans.lower().strip() == "y":
 					ans = input("Enter new file location: ")
 				else:
-					if len(sys.argv) < 2:
+					if len(argv) < 2:
 						raise ValueError("Zero command line arguments were passed, but expected at least 1")
 					break
 
 				filePath = ans
-				sys.argv[index] = ans
+				argv[index] = ans
 			index += 1
 	
 	def __createFolder(self):
-		while(os.path.isdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")):
+		while(isdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")):
 			self.__resources.folderCnt += 1
 
 	def start(self) -> None:
 		self.__createFolder()
-		os.mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")
-		os.mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}filtered{self.__resources.folderCnt}")
-		os.mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}boundingBoxes{self.__resources.folderCnt}")
+		from os import mkdir
+		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")
+		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}filtered{self.__resources.folderCnt}")
+		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}boundingBoxes{self.__resources.folderCnt}")
 
 		isContinue = False
-		for i in sys.argv[1:]:
+		for i in argv[1:]:
 			if i == "-s":
 				isContinue = True
 				continue
@@ -74,9 +77,10 @@ class CollectAnnotations:
 
 			getData = GetData(self.__resources, i)
 
-			downloadImagesThread = threading.Thread(
+			from threading import Thread
+			downloadImagesThread = Thread(
 				target=getData.downloadImages, args=(), daemon=True)
-			conceptIDsThread = threading.Thread(target=getData.getResponces,
+			conceptIDsThread = Thread(target=getData.getResponces,
 				args=(), daemon=True)
 
 			print("\nDownloading Images\n")
