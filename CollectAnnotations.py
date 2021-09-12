@@ -1,12 +1,9 @@
 from os.path import isdir
 from sys import argv
 
-from getData.GetData import *
-from getData.FindUnion import *
-from staticPy.Singleton import *
-
 class CollectAnnotations:
 	def __init__(self):
+		from staticPy.Singleton import Singleton
 		from sys import exit
 
 		if len(argv) < 2:
@@ -64,6 +61,8 @@ class CollectAnnotations:
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}filtered{self.__resources.folderCnt}")
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}boundingBoxes{self.__resources.folderCnt}")
+		from getData.GetData import GetData
+		from getData.FindUnion import FindUnion
 
 		isContinue = False
 		for i in argv[1:]:
