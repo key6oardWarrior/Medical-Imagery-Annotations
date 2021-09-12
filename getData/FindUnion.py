@@ -62,14 +62,11 @@ class FindUnion:
 				left = width
 				width = temp
 
-			if left == width:
-				left += 1
-
-			if top == height:
-				height += 1
-
-			cropped = image.crop((width, top, left, height))
-			cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
+			if((left != width) and (top != height)):
+				cropped = image.crop((width, top, left, height))
+				cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
+			else:
+				image.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
 
 			cnt += 1
 
