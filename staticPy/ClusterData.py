@@ -16,8 +16,7 @@ class ClusterData:
 		PATH = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}simular"
 
 		# create dir the dir name will be the concept id
-		from os.path import isdir
-		from os.path import join
+		from os.path import isdir, join
 		from os import mkdir
 		if isdir(PATH) == False:
 			mkdir(PATH)
@@ -65,8 +64,7 @@ class ClusterData:
 		and group all images that are simular
 		'''
 		print("Clustering data")
-		from numpy import array
-		KEYS = array(self.clusterKeys)
+		KEYS = list(self.clusterKeys)
 		longestArr = 0
 
 		for i in KEYS:

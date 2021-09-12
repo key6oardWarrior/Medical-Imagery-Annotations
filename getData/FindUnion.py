@@ -1,3 +1,6 @@
+from numpy.lib.function_base import delete
+from numpy import where, append, sum, amax
+
 class FindUnion:
 	'''
 	Find the union between all the user data given. Then use the data
@@ -80,72 +83,56 @@ class FindUnion:
 		# Returns:
 		The largest in self.__dir that is >= LOWER_BOUND and <= UPPER_BOUND
 		'''
-		localDir = []
-
-		AVG = sum(self.__dir) / len(self.__dir)
+		AVG = sum(self.__dir) / self.__dir.size
 		LOWER_BOUND = AVG * 0.6
 		UPPER_BOUND = AVG / 0.6
 
-		for num in self.__dir:
-			if((num >= LOWER_BOUND) and (num <= UPPER_BOUND)):
-				localDir.append(num)
+		self.__dir = delete(self.__dir, where(self.__dir < LOWER_BOUND))
+		self.__dir = delete(self.__dir, where(self.__dir > UPPER_BOUND))
 
-		self.__dir = []
-
-		return max(localDir) if len(localDir) > 0 else -1
+		return amax(self.__dir) if self.__dir.size > 0 else -1
 	
-	def __find(self, DIRECTION: str="left") -> None:
+	def __find(self, DIRECTION: str="left") -> int:
 		'''
 		Find all the data points within a range of indexes
 
 		# Params:
 		DIRECTION - left, width, heigth, or top
 		'''
+		from numpy import array
+		self.__dir = array([])
 		SIZE = len(DIRECTION) + 2
-		for ii in self.__directionData["Answer.annotation_data"]:
+		SEARCH = self.__directionData["Input.image_url"].iloc[self.__start]
+		SAME_URLS = where(self.__directionData["Input.image_url"].iloc[self.__start:] == SEARCH)
+		END = self.__start + SAME_URLS[0].size
+
+		for ii in self.__directionData["Answer.annotation_data"].iloc[self.__start: END]:
 			index = ii.index(DIRECTION) + SIZE
-			self.__dir.append(int(ii[index: ii.index(",", index)]))
-	
-	def __getDirData(self) -> None:
-		self.__find()
-		self.__directions["Left"].append(self.__compare())
+			self.__dir = append(self.__dir, int(ii[index: ii.index(",", index)]))
 
-		self.__find("top")
-		self.__directions["Top"].append(self.__compare())
-
-		self.__find("width")
-		self.__directions["Width"].append(self.__compare())
-
-		self.__find("height")
-		self.__directions["Height"].append(self.__compare())
+		return END
 
 	def findUnion(self) -> None:
 		'''
 		Find the union between all the data points.
 		'''
-		self.__dir = []
-		ogLocation = ""
+		self.__start = 0
 
 		'''
 		if the range soluition does not work uncomment below
 		'''
 		for ii in self.__imageLocations[self.__IMAGE_L]:
-			if ogLocation == "": # find all data points that need to be collected
-				ogLocation = ii
+			self.__find()
+			self.__directions["Left"].append(self.__compare())
 
-			elif ogLocation != ii: # collect only the needed data points
-				ogLocation = ii
+			self.__find("top")
+			self.__directions["Top"].append(self.__compare())
 
-				self.__getDirData()
+			self.__find("width")
+			self.__directions["Width"].append(self.__compare())
 
-		# No idea why, but this code always does not get the last few result,
-		# so it is getting hard coded
-		SIZE = len(self.__imageLocations[self.__IMAGE_L])
-		DIFF = len(self.__directions["Top"]) - SIZE
-
-		if DIFF < 0:
-			for imageL in range(DIFF, 0, 1):
-				self.__getDirData()
+			self.__start = self.__find("height")
+			self.__directions["Height"].append(self.__compare())
 
 		print("\nDone collecting data\n")
 		self.__crop()
