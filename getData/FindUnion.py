@@ -83,13 +83,9 @@ class FindUnion:
 		# Returns:
 		The largest in self.__dir that is >= SMALL_AVG and >= BIG_AVG
 		'''
-		total = 0
 		localDir = []
 
-		for num in self.__dir:
-			total += num
-
-		AVG = total / len(self.__dir)
+		AVG = sum(self.__dir) / len(self.__dir)
 		SMALL_AVG = AVG * 0.6
 		BIG_AVG = AVG / 0.6
 

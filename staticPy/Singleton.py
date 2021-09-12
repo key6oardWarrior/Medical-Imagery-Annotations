@@ -8,7 +8,7 @@ class Singleton(object):
 	slash = ""
 	folderCnt = 0
 
-	def __init__(self, KEY, PATH):
+	def __init__(self, KEY: object, PATH):
 		'''
 		# This constructor is private. Use Singleton.getInstance()
 		'''
@@ -35,10 +35,10 @@ class Singleton(object):
 			mkdir(RESULTS)
 
 	@classmethod
-	def getInstance(cls, PATH=None):
+	def getInstance(cls, PATH: str=None):
 		'''
-		@return <class '__main__.Singleton'> the only instance of Singleton
-		that will ever exist
+		# Returns:
+		The only instance of Singleton that will ever exist.
 		'''
 
 		if cls.__instance == None:

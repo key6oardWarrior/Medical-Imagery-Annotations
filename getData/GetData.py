@@ -3,7 +3,7 @@ from pandas import DataFrame
 
 class GetData:
 	'''
-	Get and format all user data from CSV_FILE
+	Get and format all user data from FILE_DATA
 	'''
 	def __init__(self, RESOURCES, FILE_DATA: str):
 		'''
@@ -27,8 +27,8 @@ class GetData:
 
 	def getResponces(self) -> None:
 		'''
-		Put all user responces in self.__FILE_DATA (<class 'dict'>), so they can
-		be put in a comma delimited csv file.
+		Put all user responces in self.__FILE_DATA, so they can be put in a
+		comma delimited csv file.
 		'''
 		KEYWORD = "Answer.Keyword"
 		ANSWER = "Answer.annotation_data"
