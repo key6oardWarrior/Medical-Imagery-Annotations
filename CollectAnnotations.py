@@ -50,7 +50,7 @@ class CollectAnnotations:
 				filePath = ans
 				argv[index] = ans
 			index += 1
-	
+
 	def __createFolder(self):
 		while(isdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")):
 			self.__resources.folderCnt += 1
@@ -85,12 +85,13 @@ class CollectAnnotations:
 			print("\nDownloading Images\n")
 			conceptIDsThread.start()
 			downloadImagesThread.start()
-			union = None
 
 			conceptIDsThread.join()
 			downloadImagesThread.join()
+
 			union = FindUnion(self.__resources, i)
 			union.findUnion()
+			union.crop()
 
 			getData.createCluster()
 

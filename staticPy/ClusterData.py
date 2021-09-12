@@ -87,7 +87,7 @@ class ClusterData:
 		from pandas import DataFrame
 		DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
 		self.__groupImages()
-	
+
 	@property
 	def clusterKeys(self) -> dict.keys:
 		'''
