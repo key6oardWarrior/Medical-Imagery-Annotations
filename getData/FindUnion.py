@@ -78,7 +78,7 @@ class FindUnion:
 		within a threshold and if it is store it in a list.
 
 		# Returns:
-		The largest in self.__dir that is >= LOWER_BOUND and >= UPPER_BOUND
+		The largest in self.__dir that is >= LOWER_BOUND and <= UPPER_BOUND
 		'''
 		localDir = []
 
