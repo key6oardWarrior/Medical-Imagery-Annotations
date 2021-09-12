@@ -104,7 +104,7 @@ class FindUnion:
 		SIZE = len(DIRECTION) + 2
 		SEARCH = self.__directionData["Input.image_url"].iloc[self.__start]
 		SAME_URLS = where(self.__directionData["Input.image_url"].iloc[self.__start:] == SEARCH)
-		END = self.__start + SAME_URLS[0].size
+		END = self.__start + SAME_URLS[0].size + 1
 
 		for ii in self.__directionData["Answer.annotation_data"].iloc[self.__start: END]:
 			index = ii.index(DIRECTION) + SIZE
