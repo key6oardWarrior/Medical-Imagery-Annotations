@@ -64,10 +64,11 @@ class GetData:
 		DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",")
 
 	def downloadImages(self) -> None:
-		URL = "Image Location"
+		URL = "Input.image_url"
+		Image_L = "Image Location"
 		KEYWORD = "Answer.Keyword"
 		userData = {
-			URL: [],
+			Image_L: [],
 			KEYWORD: []
 		}
 		IMAGE_FILE = f"{self.__PATH}images{self.__resources.folderCnt}{self.__resources.slash}"
@@ -85,10 +86,10 @@ class GetData:
 			path = f"{IMAGE_FILE}{cnt}.jpg"
 
 			try: # if server does not respond, error is not fatal
-				userData[URL].append(download(i, path))
+				userData[Image_L].append(download(i, path))
 			except:
 				print(f"\nImage {i} could not be downloaded")
-				userData[URL].append(f"Image {i} could not be downloaded")
+				userData[Image_L].append(f"Image {i} could not be downloaded")
 				userData[KEYWORD].append(f"Image {i} could not be downloaded")
 			else:
 				userData[KEYWORD].append(self.__FILE_DATA[KEYWORD][cnt])
@@ -102,8 +103,10 @@ class GetData:
 		'''
 		Cluster all images that have the same concept ID
 		'''
+		return
+
 		IMAGES_CIDs = DataFrame(read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv"))
-		IMAGEL = IMAGES_CIDs["Input.image_url"]
+		IMAGEL = IMAGES_CIDs["Image Location"]
 		CIDS = IMAGES_CIDs["Answer.Keyword"]
 		del IMAGES_CIDs
 		index = 0

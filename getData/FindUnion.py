@@ -3,6 +3,8 @@ class FindUnion:
 	Find the union between all the user data given. Then use the data
 	to crop an image
 	'''
+	__IMAGE_L = "Image Location"
+
 	def __init__(self, RESOURCES, fileLocation: str):
 		'''
 		Get all the cropping values given from user.
@@ -38,7 +40,7 @@ class FindUnion:
 
 		cnt = 0
 		from PIL import Image
-		for ii in self.__imageLocations["Input.image_url"]:
+		for ii in self.__imageLocations[self.__IMAGE_L]:
 			# crop image
 			image = Image.open(ii)
 			top = self.__directions["Top"][cnt]
@@ -134,7 +136,7 @@ class FindUnion:
 		'''
 		if the range soluition does not work uncomment below
 		'''
-		for ii in self.__imageLocations["Input.image_url"]:
+		for ii in self.__imageLocations[self.__IMAGE_L]:
 			if ogLocation == "": # find all data points that need to be collected
 				ogLocation = ii
 
@@ -145,7 +147,7 @@ class FindUnion:
 
 		# No idea why, but this code always does not get the last few result,
 		# so it is getting hard coded
-		SIZE = len(self.__imageLocations["Input.image_url"])
+		SIZE = len(self.__imageLocations[self.__IMAGE_L])
 		DIFF = len(self.__directions["Top"]) - SIZE
 
 		if DIFF < 0:

@@ -1,7 +1,3 @@
-import os
-import sys
-from staticPy.ClusterData import *
-
 class Singleton(object):
 	'''
 	Create only one instance of shared resources. This will also prevent a
@@ -19,20 +15,24 @@ class Singleton(object):
 		assert(createKey == Singleton.__createKey), \
 			"Singleton objects must be created using Singleton.getInstance(PATH)"
 
-		if sys.platform == "win32":
+		from sys import platform
+		if platform == "win32":
 			self.slash = "\\"
 		else:
 			self.slash = "/"
 
+		from os import getcwd
 		if PATH == "":
-			self.PATH = os.getcwd()
+			self.PATH = getcwd()
 		else:
 			self.PATH = PATH
 
 		RESULTS = f"{self.PATH}{self.slash}results"
 
-		if os.path.isdir(RESULTS) == False:
-			os.mkdir(RESULTS)
+		from os.path import isdir
+		from os import mkdir
+		if isdir(RESULTS) == False:
+			mkdir(RESULTS)
 
 	@classmethod
 	def getInstance(cls, PATH=""):
@@ -41,6 +41,7 @@ class Singleton(object):
 		that will ever exist
 		'''
 
+		from staticPy.ClusterData import ClusterData
 		if cls.__instance == None:
 			cls.__instance = Singleton(cls.__createKey, PATH)
 			cls.dataCluster = ClusterData(cls.__instance)
