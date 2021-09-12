@@ -11,9 +11,13 @@
 	<li>CollectAnnotations.py can take as many batch file command line arguments as needed.</li>
 	<li>CollectAnnotations.py <b>MUST</b> recieve  at least one command line argument. Each argument <b>MUST</b> be a csv file.</li>
 	<li>There are two optional arguments -s and -h. -h means Help. If -h is anywhere in the list of args a help message is printed, then the python <b>WILL</b> exit with error code 0. -s is the location of a folder must where all the results will be saved.</li>
-	<li>Example: <code>py3 CollectAnnotations.py fileLocation.csv</code></li>
-	<li>Example: <code>py3 CollectAnnotations.py fileLocation.csv fileLocation2.csv -a \otherFileLocation\</code></li>
-	<li>Example: <code>py3 CollectAnnotations.py -h</code></li>
+</ol>
+
+<h2>Examples</h2>
+<ol>
+	<li><code>py3 CollectAnnotations.py fileLocation.csv</code></li>
+	<li><code>py3 CollectAnnotations.py fileLocation.csv fileLocation2.csv -a \otherFileLocation\</code></li>
+	<li><code>py3 CollectAnnotations.py -h</code></li>
 </ol>
 
  </body>
