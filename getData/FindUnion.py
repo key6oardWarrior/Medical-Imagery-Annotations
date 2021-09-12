@@ -78,16 +78,16 @@ class FindUnion:
 		within a threshold and if it is store it in a list.
 
 		# Returns:
-		The largest in self.__dir that is >= SMALL_AVG and >= BIG_AVG
+		The largest in self.__dir that is >= LOWER_BOUND and >= UPPER_BOUND
 		'''
 		localDir = []
 
 		AVG = sum(self.__dir) / len(self.__dir)
-		SMALL_AVG = AVG * 0.6
-		BIG_AVG = AVG / 0.6
+		LOWER_BOUND = AVG * 0.6
+		UPPER_BOUND = AVG / 0.6
 
 		for num in self.__dir:
-			if((num >= SMALL_AVG) and (num <= BIG_AVG)):
+			if((num >= LOWER_BOUND) and (num <= UPPER_BOUND)):
 				localDir.append(num)
 
 		self.__dir = []
