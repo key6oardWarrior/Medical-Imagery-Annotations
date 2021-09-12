@@ -106,9 +106,9 @@ class FindUnion:
 		SAME_URLS = where(self.__directionData["Input.image_url"].iloc[self.__start:] == SEARCH)
 		END = self.__start + SAME_URLS[0].size + 1
 
-		for ii in self.__directionData["Answer.annotation_data"].iloc[self.__start: END]:
-			index = ii.index(DIRECTION) + SIZE
-			self.__dir = append(self.__dir, int(ii[index: ii.index(",", index)]))
+		for croppingData in self.__directionData["Answer.annotation_data"].iloc[self.__start: END]:
+			index = croppingData.index(DIRECTION) + SIZE
+			self.__dir = append(self.__dir, int(croppingData[index: croppingData.index(",", index)]))
 
 		return END
 
