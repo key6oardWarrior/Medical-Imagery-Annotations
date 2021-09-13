@@ -12,7 +12,7 @@ class GetData:
 		FILE_DATA - Data to be added from the batch file
 		'''
 		self.__resources = RESOURCES
-		self.__FILE_DATA = read_csv(FILE_DATA)
+		self.__FILE_DATA = read_csv(FILE_DATA, error_bad_lines=False)
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 	def __getEachId(self) -> None:
@@ -105,7 +105,7 @@ class GetData:
 		'''
 		return
 
-		IMAGES_CIDs = DataFrame(read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv"))
+		IMAGES_CIDs = DataFrame(read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", error_bad_lines=False))
 		IMAGEL = IMAGES_CIDs["Image Location"]
 		CIDS = IMAGES_CIDs["Answer.Keyword"]
 		del IMAGES_CIDs

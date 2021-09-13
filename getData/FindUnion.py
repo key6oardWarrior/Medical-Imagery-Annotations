@@ -26,8 +26,8 @@ class FindUnion:
 		}
 
 		from pandas import read_csv
-		self.__directionData = read_csv(fileLocation)
-		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv")
+		self.__directionData = read_csv(fileLocation, error_bad_lines=False)
+		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", error_bad_lines=False)
 
 	def crop(self) -> None:
 		'''
