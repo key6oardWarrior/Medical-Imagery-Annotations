@@ -64,12 +64,16 @@ class FindUnion:
 				temp = left
 				left = width
 				width = temp
-
-			if((left != width) and (top != height)):
+			
+			if((top == -1) and (height == -1) and (left == -1) and (width == -1)):
+				pass
+			elif((top == -1) or (height == -1)):
+				cropped = image.crop((width, image.height, left, image.height))
+			elif((left == -1) or (width == -1)):
+				cropped = image.crop((image.width, top, image.width, height))
+			elif((left != width) and (top != height)):
 				cropped = image.crop((width, top, left, height))
 				cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
-			else:
-				image.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
 
 			cnt += 1
 
