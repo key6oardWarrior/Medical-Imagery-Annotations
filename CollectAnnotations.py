@@ -1,5 +1,6 @@
 from os.path import isdir
 from sys import argv
+import threading
 
 class CollectAnnotations:
 	def __init__(self):
@@ -10,7 +11,7 @@ class CollectAnnotations:
 			raise ValueError("Zero command line arguments were passed, but expected at least 1")
 
 		if "-h" in argv:
-			print("command line args: -s [folder to save data to]")
+			print("command line args: -s (optional) [folder to save data to]")
 			exit(0)
 
 		if "-s" in argv:
@@ -78,9 +79,9 @@ class CollectAnnotations:
 
 			from threading import Thread
 			downloadImagesThread = Thread(
-				target=getData.downloadImages, args=(), daemon=True)
+				target=getData.downloadImages, args=())
 			conceptIDsThread = Thread(target=getData.getResponces,
-				args=(), daemon=True)
+				args=())
 
 			print("\nDownloading Images\n")
 			conceptIDsThread.start()
@@ -90,8 +91,8 @@ class CollectAnnotations:
 			downloadImagesThread.join()
 
 			union = FindUnion(self.__resources, i)
-			union.findUnion()
-			union.crop()
+			unionThread = Thread(target=union.findUnion, args=())
+			unionThread.start()
 
 			getData.createCluster()
 

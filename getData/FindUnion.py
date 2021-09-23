@@ -29,7 +29,7 @@ class FindUnion:
 		self.__directionData = read_csv(fileLocation, error_bad_lines=False)
 		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", error_bad_lines=False)
 
-	def crop(self) -> None:
+	def __crop(self) -> None:
 		'''
 		Crop each image based on the directional values
 		found in left, top, width, and height
@@ -142,3 +142,4 @@ class FindUnion:
 			ii += 1
 
 		print("\nDone collecting data\n")
+		self.__crop()

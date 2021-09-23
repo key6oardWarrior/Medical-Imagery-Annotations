@@ -36,26 +36,17 @@ class ClusterData:
 
 		print("Clustering complete")
 
-	def put(self, KEY: str) -> None:
+	def put(self, KEY: str, VALUE: str) -> None:
 		'''
 		Put KEY in the dict if the key does not already exists
-		this will ensure that a key's value is never overridden
+		else append the value to the KEY's list.
 
 		# Params:
 		KEY - concept id that will be used as a key in __cluster
 		'''
 		if (KEY in self.__cluster.keys()) == False:
-			self.__cluster[KEY] = []
-
-	def appendValue(self, KEY: str, VALUE: str) -> None:
-		'''
-		Append VALUE to __cluster[KEY]
-
-		# Params:
-		KEY - the key to an array that VALUE will be appended to\n
-		VALUE - value that will get appened to __cluster[KEY]
-		'''
-		if KEY in self.__cluster.keys():
+			self.__cluster[KEY] = [VALUE]
+		else:
 			self.__cluster[KEY].append(VALUE)
 
 	def makeCluster(self) -> None:
@@ -85,7 +76,7 @@ class ClusterData:
 					self.__cluster[i].extend(["N/A"]*appendAmount)
 
 		from pandas import DataFrame
-		DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",")
+		DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",", errors="replace")
 		self.__groupImages()
 
 	@property

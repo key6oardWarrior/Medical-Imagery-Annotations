@@ -53,4 +53,4 @@ while(exists(f"{path}\\batch{cnt}.csv")):
 	cnt += 1
 
 from pandas import DataFrame
-DataFrame(BATCH).to_csv(f"{path}\\batch{cnt}.csv")
+DataFrame(BATCH).to_csv(f"{path}\\batch{cnt}.csv", sep=",", errors="replace")
