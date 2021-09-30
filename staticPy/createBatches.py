@@ -35,7 +35,6 @@ else:
 
 if "-l" in argv:
 	LAST = int(argv[argv.index("-l") + 1])
-
 else:
 	raise ValueError("Expected to find -l in command line arguments")
 
@@ -49,8 +48,8 @@ from pandas import read_csv
 BATCH = read_csv(argv[1], error_bad_lines=False)[LAST: CNT]
 
 cnt = 0
-while(exists(f"{path}\\batch{cnt}.csv")):
+while(exists(f"{path}{slash}batch{cnt}.csv")):
 	cnt += 1
 
 from pandas import DataFrame
-DataFrame(BATCH).to_csv(f"{path}\\batch{cnt}.csv", sep=",", errors="replace")
+DataFrame(BATCH).to_csv(f"{path}{slash}batch{cnt}.csv", sep=",", errors="replace")
