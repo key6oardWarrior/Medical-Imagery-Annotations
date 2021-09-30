@@ -41,6 +41,9 @@ else:
 if "-c" in argv:
 	INDEX = argv.index("-c") + 1
 	CNT = int(argv[INDEX])
+
+	if CNT < LAST:
+		raise ValueError("-c argumet must be > -l argumet")
 else:
 	CNT = 100
 

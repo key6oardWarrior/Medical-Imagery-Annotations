@@ -37,7 +37,7 @@
 <ol>
 	<li><code>py3 createBatches.py batchLocation.csv -l [number]</code></li>
 	<li><code>py3 createBatches.py batchLocation.csv -l [number] -s filePath/</code></li>
-	<li><code>py3 createBatches.py batchLocation.csv -l [number] -c [number > -l]</code></li>
+	<li><code>py3 createBatches.py batchLocation.csv -l [number] -c [number > -l's value]</code></li>
 </ol>
 
  </body>
