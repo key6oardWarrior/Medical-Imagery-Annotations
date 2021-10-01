@@ -1,10 +1,7 @@
 from sys import argv
 
-SIZE = len(argv)
-if SIZE < 2:
-	raise ValueError("Expected at least one command line argument to be passed, but got", 0)
-
-del SIZE
+if len(argv) < 2:
+	raise ValueError("Expected at least one command line argument to be passed, but got 0")
 
 slash = ""
 from sys import platform
