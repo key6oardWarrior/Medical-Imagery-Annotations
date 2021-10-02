@@ -42,7 +42,7 @@ if "-c" in argv:
 	if CNT < LAST:
 		raise ValueError("-c argumet must be > -l argumet")
 else:
-	CNT = 100
+	CNT = LAST + 101
 
 from pandas import read_csv
 BATCH = read_csv(argv[1], error_bad_lines=False)[LAST: CNT]
