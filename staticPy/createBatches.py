@@ -11,7 +11,7 @@ else:
 	slash = "/"
 
 if "-h" in argv:
-	print("[file path] -s (optional): where to save file, -h (optional): help, -l (required): last index that was read from. This can be 0, -c (optional): the number of indexes to be read (exclusive). If argument is not passed 100 is assumed")
+	print("[file path] -s (optional): where to save file, -h (optional): help, -l (required): last index that was read from. This can be 0, -c (optional): the number of indexes to be read (exclusive). If argument is not passed 101 is assumed")
 
 from os.path import exists
 if exists(argv[1]) == False:
@@ -31,21 +31,21 @@ else:
 	path = f"Batches{slash}"
 
 if "-l" in argv:
-	LAST = int(argv[argv.index("-l") + 1])
+	START = int(argv[argv.index("-l") + 1])
 else:
 	raise ValueError("Expected to find -l in command line arguments")
 
 if "-c" in argv:
 	INDEX = argv.index("-c") + 1
-	CNT = int(argv[INDEX])
+	STOP = int(argv[INDEX]) + START
 
-	if CNT < LAST:
+	if STOP < START:
 		raise ValueError("-c argumet must be > -l argumet")
 else:
-	CNT = LAST + 101
+	STOP = 101 + START
 
 from pandas import read_csv
-BATCH = read_csv(argv[1], error_bad_lines=False)[LAST: CNT]
+BATCH = read_csv(argv[1], error_bad_lines=False)[START: STOP]
 
 cnt = 0
 while(exists(f"{path}{slash}batch{cnt}.csv")):
