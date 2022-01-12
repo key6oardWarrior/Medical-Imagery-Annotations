@@ -1,5 +1,5 @@
 # other files
-launch.json
+*.json
 *.csv
 *.jpg
 

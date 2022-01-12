@@ -12,6 +12,8 @@ else:
 
 if "-h" in argv:
 	print("[file path] -s (optional): where to save file, -h (optional): help, -l (required): last index that was read from. This can be 0, -c (optional): the number of indexes to be read (exclusive). If argument is not passed 101 is assumed")
+	from sys import exit
+	exit(0)
 
 from os.path import exists
 if exists(argv[1]) == False:
@@ -45,7 +47,7 @@ else:
 	STOP = 101 + START
 
 from pandas import read_csv
-BATCH = read_csv(argv[1], error_bad_lines=False)[START: STOP]
+BATCH = read_csv(argv[1], on_bad_lines='skip')[START: STOP]
 
 cnt = 0
 while(exists(f"{path}{slash}batch{cnt}.csv")):

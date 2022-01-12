@@ -6,6 +6,7 @@
 <p>This code is used for Morgan State University research. Dr. Rahman facilitated this research. This research is designed to help doctors better detect diseases in humans using ML. First, doctors compleate surveys via Amazon Mturk. Next, some algorithms get all the useful data. Lastly, this data is then used as inputs for a machine learning algorithm.</p>
 
 <h2>How to Use</h2>
+<p><b>Note:</b> Ensure Pandas is version 1.3, or greater</p>
 
 <h3>Collect Annotations</h3>
 <ol>
