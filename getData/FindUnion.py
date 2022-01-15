@@ -138,5 +138,4 @@ class FindUnion:
 
 			ii += 1
 
-		print("\nDone collecting data\n")
 		self.__crop()

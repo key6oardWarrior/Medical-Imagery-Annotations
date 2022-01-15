@@ -78,11 +78,14 @@ class CollectAnnotations:
 			getData = GetData(self.__resources, i)
 			getData.downloadImages()
 			print("\nDone Downloading Images\n")
-			getData.getResponces()
+
+			responceThread = Thread(target=getData.getResponces)
+			responceThread.start()
 
 			union = FindUnion(self.__resources, i)
-			unionThread = Thread(target=union.findUnion, args=())
-			unionThread.start()
+			union.findUnion()
+
+			responceThread.join()
 
 			self.__resources.folderCnt += 1
 
