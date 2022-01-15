@@ -79,14 +79,11 @@ class GetData:
 				boundingBoxes[BOX].append("N/A")
 
 		clusterThread.join()
-		createCluster = Thread(target=self.__resources.dataCluster.makeCluster)
-		createCluster.start()
 
 		DataFrame(self.__conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",", errors="replace")
-		# DataFrame(self.__conceptIDs[ANSWER]).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredAnswers.csv", sep=",", errors="replace")
 		DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",", errors="replace")
 		print("\nDone collecting data\n")
-		createCluster.join()
+		self.__resources.dataCluster.makeCluster()
 
 	def downloadImages(self) -> None:
 		URL = "Input.image_url"
