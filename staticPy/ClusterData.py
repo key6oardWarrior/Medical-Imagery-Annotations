@@ -55,7 +55,7 @@ class ClusterData:
 		and group all images that are simular
 		'''
 		print("Clustering data")
-		KEYS = list(self.clusterKeys)
+		KEYS = list(self.__cluster.keys())
 		longestArr = 0
 
 		for i in KEYS:
@@ -80,7 +80,7 @@ class ClusterData:
 		self.__groupImages()
 
 	@property
-	def clusterKeys(self) -> dict.keys:
+	def cluster(self) -> dict.keys:
 		'''
 		# Returns:
 		All of the concept ids that are used as keys in the cluster

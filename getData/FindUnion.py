@@ -1,5 +1,5 @@
 from numpy.lib.function_base import delete
-from numpy import where, append, sum, amax
+from numpy import where, append, sum, amax, array
 
 class FindUnion:
 	'''
@@ -26,8 +26,8 @@ class FindUnion:
 		}
 
 		from pandas import read_csv
-		self.__directionData = read_csv(fileLocation, error_bad_lines=False)
-		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", error_bad_lines=False)
+		self.__directionData = read_csv(fileLocation, on_bad_lines='skip')
+		self.__imageLocations = read_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredResults.csv", on_bad_lines='skip')
 
 	def __crop(self) -> None:
 		'''
@@ -73,7 +73,7 @@ class FindUnion:
 				cropped = image.crop((image.width, top, image.width, height))
 			elif((left != width) and (top != height)):
 				cropped = image.crop((width, top, left, height))
-				cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
+			cropped.save(f"{PATH}croppedImages{self.__resources.slash}{cnt}.jpg")
 
 			cnt += 1
 
@@ -87,9 +87,10 @@ class FindUnion:
 		# Returns:
 		The largest in self.__dir that is >= LOWER_BOUND and <= UPPER_BOUND
 		'''
+		THRESHOLD = 0.6
 		AVG = sum(self.__dir) / self.__dir.size
-		LOWER_BOUND = AVG * 0.6
-		UPPER_BOUND = AVG / 0.6
+		LOWER_BOUND = AVG * THRESHOLD
+		UPPER_BOUND = AVG / THRESHOLD
 
 		self.__dir = delete(self.__dir, where(self.__dir < LOWER_BOUND))
 		self.__dir = delete(self.__dir, where(self.__dir > UPPER_BOUND))
@@ -103,7 +104,6 @@ class FindUnion:
 		# Params:
 		DIRECTION - left, width, heigth, or top
 		'''
-		from numpy import array
 		self.__dir = array([])
 		SIZE = len(DIRECTION) + 2
 		SEARCH = self.__directionData["Input.image_url"].iloc[self.__start]
@@ -122,9 +122,6 @@ class FindUnion:
 		'''
 		self.__start = 0
 
-		'''
-		if the range soluition does not work uncomment below
-		'''
 		ii = 0
 		while ii < len(self.__imageLocations[self.__IMAGE_L]):
 			self.__find()

@@ -1,10 +1,12 @@
-from sys import argv
+from sys import argv, platform, exit
+from os.path import exists
+from os import mkdir
+from pandas import read_csv, DataFrame
 
 if len(argv) < 2:
 	raise ValueError("Expected at least one command line argument to be passed, but got 0")
 
 slash = ""
-from sys import platform
 if platform == "win32":
 	slash = "\\"
 else:
@@ -12,10 +14,8 @@ else:
 
 if "-h" in argv:
 	print("[file path] -s (optional): where to save file, -h (optional): help, -l (required): last index that was read from. This can be 0, -c (optional): the number of indexes to be read (exclusive). If argument is not passed 101 is assumed")
-	from sys import exit
 	exit(0)
 
-from os.path import exists
 if exists(argv[1]) == False:
 	raise ValueError(f"File {argv[1]} does not exists")
 
@@ -24,7 +24,6 @@ if "-s" in argv:
 	INDEX = argv.index("-s") + 1
 	path = f"{argv[INDEX]}{slash}"
 else:
-	from os import mkdir
 	try:
 		mkdir("Batches")
 	except FileExistsError:
@@ -46,12 +45,10 @@ if "-c" in argv:
 else:
 	STOP = 101 + START
 
-from pandas import read_csv
 BATCH = read_csv(argv[1], on_bad_lines='skip')[START: STOP]
 
 cnt = 0
 while(exists(f"{path}{slash}batch{cnt}.csv")):
 	cnt += 1
 
-from pandas import DataFrame
 DataFrame(BATCH).to_csv(f"{path}{slash}batch{cnt}.csv", sep=",", errors="replace")
