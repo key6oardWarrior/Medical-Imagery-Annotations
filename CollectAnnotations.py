@@ -1,6 +1,5 @@
 from os.path import isdir
 from sys import argv
-import threading
 
 class CollectAnnotations:
 	def __init__(self):
@@ -62,9 +61,10 @@ class CollectAnnotations:
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}images{self.__resources.folderCnt}")
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}filtered{self.__resources.folderCnt}")
 		mkdir(f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}boundingBoxes{self.__resources.folderCnt}")
+		
 		from getData.GetData import GetData
 		from getData.FindUnion import FindUnion
-
+		from threading import Thread
 		isContinue = False
 		for i in argv[1:]:
 			if i == "-s":
@@ -76,25 +76,13 @@ class CollectAnnotations:
 				continue
 
 			getData = GetData(self.__resources, i)
-
-			from threading import Thread
-			downloadImagesThread = Thread(
-				target=getData.downloadImages, args=())
-			conceptIDsThread = Thread(target=getData.getResponces,
-				args=())
-
-			print("\nDownloading Images\n")
-			conceptIDsThread.start()
-			downloadImagesThread.start()
-
-			conceptIDsThread.join()
-			downloadImagesThread.join()
+			getData.downloadImages()
+			print("\nDone Downloading Images\n")
+			getData.getResponces()
 
 			union = FindUnion(self.__resources, i)
 			unionThread = Thread(target=union.findUnion, args=())
 			unionThread.start()
-
-			getData.createCluster()
 
 			self.__resources.folderCnt += 1
 
