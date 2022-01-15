@@ -1,3 +1,5 @@
+from base64 import encode, decode
+from distutils.command.clean import clean
 from sys import argv, platform, exit
 from os.path import exists
 from os import mkdir
@@ -52,3 +54,13 @@ while(exists(f"{path}{slash}batch{cnt}.csv")):
 	cnt += 1
 
 DataFrame(BATCH).to_csv(f"{path}{slash}batch{cnt}.csv", sep=",", errors="replace")
+
+# clean csv
+batch = open(f"{path}{slash}batch{cnt}.csv", 'r').read()
+cleanBatch = open(f"{path}{slash}batch{cnt}.csv", 'w')
+
+for line in batch:
+	encodedStr = line.encode("ascii", "ignore")
+	cleanBatch.write(encodedStr.decode())
+
+cleanBatch.close()
