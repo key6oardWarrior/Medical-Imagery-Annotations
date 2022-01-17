@@ -1,7 +1,6 @@
 from math import nan
 from pandas import read_csv
 from pandas import DataFrame
-from numpy import array, append
 
 class GetData:
 	'''
@@ -79,7 +78,6 @@ class GetData:
 				boundingBoxes[BOX].append("N/A")
 
 		clusterThread.join()
-
 		DataFrame(self.__conceptIDs).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}filteredConceptIDs.csv", sep=",", errors="replace")
 		DataFrame(boundingBoxes).to_csv(f"{self.__PATH}boundingBoxes{self.__resources.folderCnt}{self.__resources.slash}boundingBoxes.csv", sep=",", errors="replace")
 		print("\nDone collecting data\n")
