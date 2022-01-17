@@ -1,4 +1,3 @@
-from math import nan
 from pandas import read_csv
 from pandas import DataFrame
 
