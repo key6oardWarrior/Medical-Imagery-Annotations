@@ -78,11 +78,3 @@ class ClusterData:
 		from pandas import DataFrame
 		DataFrame(self.__cluster).to_csv(f"{self.__PATH}filtered{self.__resources.folderCnt}{self.__resources.slash}clusteredData.csv", sep=",", errors="replace")
 		self.__groupImages()
-
-	@property
-	def cluster(self) -> dict.keys:
-		'''
-		# Returns:
-		All of the concept ids that are used as keys in the cluster
-		'''
-		return self.__cluster.keys()

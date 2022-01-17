@@ -23,10 +23,9 @@ class GetData:
 		index = 0
 
 		for cids in self.__URLs["Answer.Keyword"]:
-			if type(cids) == float:
-				continue
-
-			if cids.find("|") > -1:
+			if type(cids) == float: # if the cell is empty
+				pass
+			elif cids.find("|") > -1:
 				for cid in cids.split("|"): # get all ids
 					if cid.find(":") > -1: # put id in cluster
 						self.__resources.dataCluster.put(cid.split(":")[0],
@@ -57,7 +56,7 @@ class GetData:
 		boundingBoxes = { BOX: [] }
 
 		for ii in self.__FILE_DATA[KEYWORD]:
-			if type(ii) == float:
+			if type(ii) == float: # if the cell is empty
 				self.__conceptIDs[CONCEPT].append(["N/A"])
 			elif ii.find("|") != -1: # get all IDs
 				self.__conceptIDs[CONCEPT].append(ii.split("|"))
@@ -66,13 +65,14 @@ class GetData:
 			else:
 				self.__conceptIDs[CONCEPT].append(["N/A"])
 
+		# get the annotation data
 		for ii in self.__FILE_DATA[ANSWER]:
-			label = ii.find("label")
-			endLabel = ii.find("}", label)
+			LABEL = ii.find("label")
+			endLabel = ii.find("}", LABEL)
 
-			if label > -1:
-				self.__conceptIDs[ANSWER].append(ii[label + 8: endLabel])
-				boundingBoxes[BOX].append(ii[: label])
+			if LABEL > -1:
+				self.__conceptIDs[ANSWER].append(ii[LABEL + 8: endLabel])
+				boundingBoxes[BOX].append(ii[: LABEL])
 			else:
 				self.__conceptIDs[ANSWER].append("N/A")
 				boundingBoxes[BOX].append("N/A")

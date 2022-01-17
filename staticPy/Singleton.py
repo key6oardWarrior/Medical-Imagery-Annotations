@@ -10,7 +10,7 @@ class Singleton(object):
 
 	def __init__(self, KEY: object, PATH):
 		'''
-		# This constructor is private. Use Singleton.getInstance()
+		# This constructor is private. Use Singleton.getInstance(PATH)
 		'''
 		assert(KEY == Singleton.__KEY), \
 			"Singleton objects must be created using Singleton.getInstance(PATH)"
@@ -40,7 +40,6 @@ class Singleton(object):
 		# Returns:
 		The only instance of Singleton that will ever exist.
 		'''
-
 		if cls.__instance == None:
 			cls.__instance = Singleton(cls.__KEY, PATH)
 

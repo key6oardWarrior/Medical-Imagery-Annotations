@@ -1,5 +1,3 @@
-from base64 import encode, decode
-from distutils.command.clean import clean
 from sys import argv, platform, exit
 from os.path import exists
 from os import mkdir
