@@ -19,7 +19,7 @@
 <h3>Create Batches</h3>
 <ol>
 	<li>To run the code: <code>py3 createBatches.py batchLocation.csv -l [number]</code></li>
-	<li>createBatches.py <b>MUST</b> take -l as an argument. It is the last index that was read from the last time createBatches.py was run, or the index that createBatches should start from.</li>
+	<li>createBatches.py <b>MUST</b> take -l as an argument. It is the index that createBatches should start from.</li>
 	<li>-s is an optional argument. It is the location where the results from createBatches.py will be saved. If it is not passed a Batches folder will be created and all output files will be saved there.</li>
 	<li>-h means help. If this argument is anywere in the list of arguments a help message will be printed and the code will exit with error code 0.</li>
 	<li>-c is the index to end at and it is exclusive. The value to end at is calulated by adding -l's values + -c's value. If -c is not passed 101 is assumed.</li>
