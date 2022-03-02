@@ -1,5 +1,6 @@
 from numpy.lib.function_base import delete
 from numpy import where, append, sum, amax, array
+from staticPy.Singleton import Singleton
 
 class FindUnion:
 	'''
@@ -8,7 +9,7 @@ class FindUnion:
 	'''
 	__IMAGE_L = "Image Location"
 
-	def __init__(self, RESOURCES, fileLocation: str):
+	def __init__(self, fileLocation: str):
 		'''
 		Get all the cropping values given from user.
 
@@ -16,7 +17,9 @@ class FindUnion:
 		RESOURCES - Singleton pattern\n
 		fileLocation - the location of the directional data
 		'''
-		self.__resources = RESOURCES
+
+		self.__resources = Singleton.getInstance()
+
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 		self.__directions = {
 			"Left": [],

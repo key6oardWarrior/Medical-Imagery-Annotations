@@ -1,3 +1,5 @@
+from staticPy.Singleton import Singleton
+
 class ClusterData:
 	'''
 	Each concept ID is used as a key in __cluster
@@ -5,8 +7,8 @@ class ClusterData:
 	'''
 	__cluster = {}
 
-	def __init__(self, RESOURCES):
-		self.__resources = RESOURCES
+	def __init__(self):
+		self.__resources = Singleton.getInstance()
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 
 	def __groupImages(self) -> None:

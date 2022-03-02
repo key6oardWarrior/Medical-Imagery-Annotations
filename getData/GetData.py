@@ -1,17 +1,19 @@
+from tokenize import Single
 from pandas import read_csv
 from pandas import DataFrame
+from staticPy.Singleton import Singleton
 
 class GetData:
 	'''
 	Get and format all user data from FILE_DATA
 	'''
-	def __init__(self, RESOURCES, FILE_DATA: str):
+	def __init__(self, FILE_DATA: str):
 		'''
 		# Params:
 		RESOURCES - Singleton pattern\n
 		FILE_DATA - Data to be added from the batch file
 		'''
-		self.__resources = RESOURCES
+		self.__resources = Singleton.getInstance()
 		self.__FILE_DATA = read_csv(FILE_DATA, on_bad_lines='skip')
 		self.__PATH = f"{self.__resources.PATH}{self.__resources.slash}results{self.__resources.slash}"
 

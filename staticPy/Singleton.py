@@ -44,6 +44,6 @@ class Singleton(object):
 			cls.__instance = Singleton(cls.__KEY, PATH)
 
 			from staticPy.ClusterData import ClusterData
-			cls.dataCluster = ClusterData(cls.__instance)
+			cls.dataCluster = ClusterData()
 
 		return cls.__instance

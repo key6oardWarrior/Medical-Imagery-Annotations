@@ -65,6 +65,7 @@ class CollectAnnotations:
 		from getData.GetData import GetData
 		from getData.FindUnion import FindUnion
 		from threading import Thread
+
 		isContinue = False
 		for i in argv[1:]:
 			if i == "-s":
@@ -75,14 +76,14 @@ class CollectAnnotations:
 				isContinue = False
 				continue
 
-			getData = GetData(self.__resources, i)
+			getData = GetData(i)
 			getData.downloadImages()
 			print("\nDone Downloading Images\n")
 
 			responceThread = Thread(target=getData.getResponces)
 			responceThread.start()
 
-			union = FindUnion(self.__resources, i)
+			union = FindUnion(i)
 			union.findUnion()
 
 			responceThread.join()
